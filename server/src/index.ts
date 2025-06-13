@@ -1,7 +1,8 @@
-import express from "express"
+import {ApolloServer} from "apollo-server-express";
 import cors from "cors"
 import dotenv from "dotenv"
-import {ApolloServer} from "apollo-server-express";
+import express from "express"
+import {context} from "./context";
 import {resolvers, typeDefs} from "./schema";
 
 dotenv.config()
@@ -15,6 +16,7 @@ async function startServer() {
     const apolloServer = new ApolloServer({
         typeDefs,
         resolvers,
+        context,
     })
 
     await apolloServer.start()
@@ -22,7 +24,7 @@ async function startServer() {
     apolloServer.applyMiddleware({app, path: '/graphql'})
 
     app.listen(PORT, () => {
-        console.log(`🚀 Server ready at http://localhost:${PORT}/graphql` );
+        console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
     })
 }
 
