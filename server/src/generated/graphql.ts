@@ -32,19 +32,24 @@ export type Bounty = {
 export type Mutation = {
   __typename?: 'Mutation';
   createBounty: Bounty;
+  deleteBounty: Bounty;
   loginUser: Scalars['String']['output'];
   registerUser: Scalars['String']['output'];
+  updateBounty: Bounty;
 };
 
 
 export type MutationCreateBountyArgs = {
-  acceptedBy?: InputMaybe<Scalars['String']['input']>;
-  createdBy: Scalars['String']['input'];
   description: Scalars['String']['input'];
   planet: Scalars['String']['input'];
   reward: Scalars['Int']['input'];
   targetName: Scalars['String']['input'];
   title: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteBountyArgs = {
+  bountyId: Scalars['ID']['input'];
 };
 
 
@@ -57,6 +62,16 @@ export type MutationLoginUserArgs = {
 export type MutationRegisterUserArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateBountyArgs = {
+  bountyId: Scalars['ID']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  planet?: InputMaybe<Scalars['String']['input']>;
+  reward?: InputMaybe<Scalars['Int']['input']>;
+  targetName?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Query = {
@@ -180,9 +195,11 @@ export type BountyResolvers<ContextType = any, ParentType extends ResolversParen
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createBounty?: Resolver<ResolversTypes['Bounty'], ParentType, ContextType, RequireFields<MutationCreateBountyArgs, 'createdBy' | 'description' | 'planet' | 'reward' | 'targetName' | 'title'>>;
+  createBounty?: Resolver<ResolversTypes['Bounty'], ParentType, ContextType, RequireFields<MutationCreateBountyArgs, 'description' | 'planet' | 'reward' | 'targetName' | 'title'>>;
+  deleteBounty?: Resolver<ResolversTypes['Bounty'], ParentType, ContextType, RequireFields<MutationDeleteBountyArgs, 'bountyId'>>;
   loginUser?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'email' | 'password'>>;
   registerUser?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationRegisterUserArgs, 'email' | 'password'>>;
+  updateBounty?: Resolver<ResolversTypes['Bounty'], ParentType, ContextType, RequireFields<MutationUpdateBountyArgs, 'bountyId'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {

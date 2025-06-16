@@ -1,78 +1,73 @@
-import bcrypt from 'bcrypt';
-import dotenv from "dotenv"
-import jwt from 'jsonwebtoken';
-import {Context} from "src/context";
-
-dotenv.config()
-
-const JWT_SECRET_SECRET = process.env.JWT_SECRET_SECRET!
+import {Bounty as PrismaBounty} from "@prisma/client";
+import {Context} from "../../context";
+import {User} from "../../generated/graphql";
+import {authService, AuthType, bountyService, userService} from "../../services";
+import {CreateBountyArgsType, UpdateBountyArgsType} from "../../types";
+import {requireAuth, requireOwnership} from "../../utils";
 
 export const resolvers = {
     Query: {
-        me: async (_parent: unknown, _args: unknown, ctx: Context) => {
-            if (!ctx.currentUser) throw new Error("Not authenticated")
-
-            return ctx.prisma.user.findUnique({where: {id: ctx.currentUser.id}})
+        currentUser: (_p: unknown, _args: unknown, ctx: Context) => {
+            requireAuth(ctx)
+            return userService.getById(ctx, ctx.currentUser!.id)
         },
 
-        allUsers: async (_parent: any, _args: any, ctx: Context) => {
-            return ctx.prisma.user.findMany()
-        },
+        allUsers: (_p: unknown, _args: unknown, ctx: Context) => userService.getAllUsers(ctx),
 
-        allAvailableBounties: async (_parent: unknown, _args: unknown, ctx: Context) => {
-            return ctx.prisma.bounty.findMany({
-                where: {
-                    acceptedById: {
-                        equals: null
-                    }
-                }
-            })
-        },
+        allAvailableBounties: (_p: unknown, _args: unknown, ctx: Context) => bountyService.getAllAvailable(ctx)
     },
 
     Mutation: {
-        registerUser: async (_parent: unknown, args: { email: string, password: string }, ctx: Context) => {
-            const hashedPassword = await bcrypt.hash(args.password, 10)
-            const newUser = await ctx.prisma.user.create({
-                data: {email: args.email, password: hashedPassword}
-            })
-            const token = jwt.sign({id: newUser.id, email: newUser.email}, JWT_SECRET_SECRET, {expiresIn: "1h"})
+        registerUser: (_p: unknown, args: AuthType, ctx: Context) => authService.register(ctx, args),
 
-            return token
+        loginUser: (_p: unknown, args: AuthType, ctx: Context) => authService.login(ctx, args),
+
+        createBounty: (_p: unknown, args: CreateBountyArgsType, ctx: Context) => {
+            requireAuth(ctx)
+            return bountyService.create(ctx, args,)
         },
 
-        loginUser: async (_parent: unknown, args: { email: string, password: string }, ctx: Context) => {
-            const user = await ctx.prisma.user.findUnique({
-                where: {email: args.email}
-            })
-            if (!user) throw new Error("No user found")
+        updateBounty: async (_p: unknown, args: UpdateBountyArgsType, ctx: Context) => {
+            const bounty = await bountyService.getById(ctx, args.bountyId);
 
-            const valid = await bcrypt.compare(args.password, user.password)
-            if (!valid) throw new Error("Invalid password")
+            if (!bounty) {
+                throw new Error('Bounty not found');
+            }
 
-            const token = jwt.sign({id: user.id, email: user.email}, JWT_SECRET_SECRET, {expiresIn: "1h"})
-            return token
+            requireOwnership(ctx.currentUser!.id, bounty.createdById);
+
+            return bountyService.updateById(ctx, args)
         },
 
-        createBounty: (_parent: unknown, args: {
-            title: string,
-            description: string,
-            targetName: string,
-            planet: string,
-            reward: number,
-        }, ctx: Context) => {
-            if (!ctx.currentUser) throw new Error("Not authenticated") // todo: навіщо перевіряти якщо це вже зроблено у context??
+        deleteBounty: async (_p: unknown, args: { bountyId: string }, ctx: Context) => {
+            const bounty = await bountyService.getById(ctx, args.bountyId)
 
-            return ctx.prisma.bounty.create({
-                data: {
-                    title: args.title,
-                    description: args.description,
-                    targetName: args.targetName,
-                    planet: args.planet,
-                    reward: args.reward,
-                    createdById: ctx.currentUser.id,
-                }
-            })
+            if (!bounty) {
+                throw new Error('Bounty not found');
+            }
+
+            await bountyService.deleteById(ctx, args.bountyId)
         }
+
+    },
+
+    Bounty: {
+        createdBy: (parent: PrismaBounty, _args: unknown, ctx: Context) => {
+            return userService.getById(ctx, parent.createdById)
+        },
+
+        acceptedBy: (parent: PrismaBounty, _args: unknown, ctx: Context) => {
+            if (!parent.acceptedById) return null;
+            return userService.getById(ctx, parent.acceptedById)
+        }
+    },
+
+    User: {
+        bountiesCreated: (parent: User, _args: unknown, ctx: Context) => {
+            return ctx.prisma.bounty.findMany({where: {createdById: parent.id}});
+        },
+        bountiesAccepted: (parent: User, _args: unknown, ctx: Context) => {
+            return ctx.prisma.bounty.findMany({where: {acceptedById: parent.id}});
+        },
     }
 }

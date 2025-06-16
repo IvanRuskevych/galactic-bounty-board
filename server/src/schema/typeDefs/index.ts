@@ -17,25 +17,43 @@ export const typeDefs = gql`
         reward: Int!
         createdBy: User!
         acceptedBy: User
+        createdById: String!
+        acceptedById: String!
     }
 
     type Query {
-        me: User
-        allUsers: [User!]!
+        currentUser: User
         allAvailableBounties: [Bounty!]!
+        allUsers: [User!]!
+    }
+    
+    type AuthPayload {
+        token: String!
+        user: User!
     }
 
     type Mutation {
-        registerUser(email: String!, password: String!): String!  # return token
-        loginUser(email: String!, password: String!): String!  # return token
+        registerUser(email: String!, password: String!): AuthPayload!
+        
+        loginUser(email: String!, password: String!): AuthPayload!
+        
         createBounty(
             title: String!,
             description: String!,
             targetName: String!,
             planet: String!,
-            reward: Int!,
-            createdBy: String!,
-            acceptedBy: String
+            reward: Int!            
         ): Bounty!
+        
+        updateBounty(
+            bountyId: ID!
+            title: String,
+            description: String,
+            targetName: String,
+            planet: String,
+            reward: Int 
+        ): Bounty!
+        
+        deleteBounty(bountyId: ID!): Bounty!
     }
 `
