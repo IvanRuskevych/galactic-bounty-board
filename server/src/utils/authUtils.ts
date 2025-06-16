@@ -11,5 +11,4 @@ export function requireOwnership(userId: string, ownerId: string) {
     if (userId !== ownerId) {
         throw ApiErrors.Forbidden("User is not the owner");
     }
-
 }

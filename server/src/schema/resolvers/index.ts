@@ -13,8 +13,6 @@ export const resolvers = {
             return userService.getById(ctx, ctx.currentUser!.id)
         },
 
-        allUsers: (_p: unknown, _args: unknown, ctx: Context) => userService.getAllUsers(ctx),
-
         allAvailableBounties: (_p: unknown, _args: unknown, ctx: Context) => bountyService.getAllAvailable(ctx)
     },
 
@@ -44,17 +42,29 @@ export const resolvers = {
             return bountyService.updateById(ctx, args)
         },
 
-        deleteBounty: async (_p: unknown, args: { bountyId: string }, ctx: Context) => {
+        acceptBounty: async (_p: unknown, args: { bountyId: string }, ctx: Context) => {
+            requireAuth(ctx)
             validateInput(ValidateIdSchema, {id: args.bountyId})
 
             const bounty = await bountyService.getById(ctx, args.bountyId)
+
             if (!bounty) {
                 throw ApiErrors.NotFound('Bounty not found');
             }
 
-            requireOwnership(ctx.currentUser!.id, bounty.createdById);
+            if (bounty.acceptedById === ctx.currentUser!.id) {
+                throw ApiErrors.Conflict('You have already accepted this bounty');
+            }
 
-            await bountyService.deleteById(ctx, args.bountyId)
+            if (bounty.acceptedById) {
+                throw ApiErrors.Conflict("Bounty already accepted");
+            }
+
+            if (bounty.createdById === ctx.currentUser!.id) {
+                throw ApiErrors.Forbidden('You cannot accept your own bounty');
+            }
+
+            return bountyService.acceptById(ctx, args.bountyId, ctx.currentUser!.id)
         }
 
     },

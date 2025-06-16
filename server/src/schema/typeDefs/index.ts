@@ -24,9 +24,8 @@ export const typeDefs = gql`
     type Query {
         currentUser: User
         allAvailableBounties: [Bounty!]!
-        allUsers: [User!]!
     }
-    
+
     type AuthPayload {
         token: String!
         user: User!
@@ -34,26 +33,26 @@ export const typeDefs = gql`
 
     type Mutation {
         registerUser(email: String!, password: String!): AuthPayload!
-        
+
         loginUser(email: String!, password: String!): AuthPayload!
-        
+
         createBounty(
             title: String!,
             description: String!,
             targetName: String!,
             planet: String!,
-            reward: Int!            
+            reward: Int!
         ): Bounty!
-        
+
         updateBounty(
             bountyId: ID!
             title: String,
             description: String,
             targetName: String,
             planet: String,
-            reward: Int 
+            reward: Int
         ): Bounty!
-        
-        deleteBounty(bountyId: ID!): Bounty!
+
+        acceptBounty(bountyId: ID!): Bounty!
     }
 `

@@ -36,8 +36,9 @@ export const bountyService = {
         })
     },
 
-    deleteById: (ctx: Context, bountyId: string) =>
-        ctx.prisma.bounty.delete({
+    acceptById: (ctx: Context, bountyId: string, userId: string) =>
+        ctx.prisma.bounty.update({
             where: {id: bountyId},
+            data: {acceptedById: userId}
         })
 }
