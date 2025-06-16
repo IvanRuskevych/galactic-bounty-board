@@ -3,7 +3,8 @@ import {Context} from "../../context";
 import {User} from "../../generated/graphql";
 import {authService, AuthType, bountyService, userService} from "../../services";
 import {CreateBountyArgsType, UpdateBountyArgsType} from "../../types";
-import {requireAuth, requireOwnership} from "../../utils";
+import {ApiErrors, requireAuth, requireOwnership, validateInput} from "../../utils";
+import {CreateBountySchema, UpdateBountySchema, ValidateIdSchema} from "../../validations";
 
 export const resolvers = {
     Query: {
@@ -24,27 +25,34 @@ export const resolvers = {
 
         createBounty: (_p: unknown, args: CreateBountyArgsType, ctx: Context) => {
             requireAuth(ctx)
-            return bountyService.create(ctx, args,)
+            const validatedArgs = validateInput(CreateBountySchema, args);
+            return bountyService.create(ctx, validatedArgs)
         },
 
         updateBounty: async (_p: unknown, args: UpdateBountyArgsType, ctx: Context) => {
-            const bounty = await bountyService.getById(ctx, args.bountyId);
+            validateInput(ValidateIdSchema, {id: args.bountyId})
 
+            const bounty = await bountyService.getById(ctx, args.bountyId);
             if (!bounty) {
-                throw new Error('Bounty not found');
+                throw ApiErrors.NotFound('Bounty not found');
             }
 
             requireOwnership(ctx.currentUser!.id, bounty.createdById);
+
+            validateInput(UpdateBountySchema, args)
 
             return bountyService.updateById(ctx, args)
         },
 
         deleteBounty: async (_p: unknown, args: { bountyId: string }, ctx: Context) => {
-            const bounty = await bountyService.getById(ctx, args.bountyId)
+            validateInput(ValidateIdSchema, {id: args.bountyId})
 
+            const bounty = await bountyService.getById(ctx, args.bountyId)
             if (!bounty) {
-                throw new Error('Bounty not found');
+                throw ApiErrors.NotFound('Bounty not found');
             }
+
+            requireOwnership(ctx.currentUser!.id, bounty.createdById);
 
             await bountyService.deleteById(ctx, args.bountyId)
         }

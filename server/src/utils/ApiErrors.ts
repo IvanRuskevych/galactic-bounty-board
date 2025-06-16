@@ -1,8 +1,10 @@
 import {createGraphQLError} from "../utils/graphqlError";
 
 export const ApiErrors = {
-    BadRequest: (message = 'Bad request') =>
-        createGraphQLError(message, 400, 'BAD_REQUEST'),
+    BadRequest: (message: string | Record<string, string[]> = 'Bad request') =>
+        typeof message === 'string' ?
+            createGraphQLError(message, 400, 'BAD_REQUEST')
+            : createGraphQLError("Invalid input", 400, 'BAD_REQUEST', message),
 
     Unauthorized: (message = 'Unauthorized') =>
         createGraphQLError(message, 401, 'UNAUTHORIZED'),

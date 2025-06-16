@@ -1,6 +1,7 @@
 import {Context} from "../context";
 import {userService} from "../services/userService";
-import {ApiErrors, normalizeEmail, passwordUtils, tokenUtils} from "../utils";
+import {ApiErrors, normalizeEmail, passwordUtils, tokenUtils, validateInput} from "../utils";
+import {AuthSchema} from "../validations";
 
 export interface AuthType {
     email: string,
@@ -9,13 +10,13 @@ export interface AuthType {
 
 export const authService = {
     register: async (ctx: Context, args: AuthType) => {
-        const {email, password} = args;
+        const {email, password} = validateInput(AuthSchema, args);
         const normalizedEmail = normalizeEmail(email)
 
         const user = await userService.getByEmail(ctx, normalizedEmail)
 
         if (user) {
-            return ApiErrors.Conflict("Email already exists!!")
+            return ApiErrors.Conflict("Email already exists")
         }
 
         const hashedPassword = await passwordUtils.hashedPassword(password)
@@ -27,7 +28,7 @@ export const authService = {
     },
 
     login: async (ctx: Context, args: AuthType) => {
-        const {email, password} = args;
+        const {email, password} = validateInput(AuthSchema, args);
         const normalizedEmail = normalizeEmail(email)
 
         const user = await userService.getByEmail(ctx, normalizedEmail)

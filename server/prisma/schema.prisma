@@ -15,7 +15,7 @@ datasource db {
 }
 
 model User {
-  id               String   @id @default(cuid())
+  id               String   @id @default(uuid(4))
   email            String   @unique
   password         String
   bountiesCreated  Bounty[] @relation("CreatedBounties")
@@ -23,7 +23,7 @@ model User {
 }
 
 model Bounty {
-  id           String  @id @default(cuid())
+  id           String  @id @default(uuid(4))
   title        String
   description  String
   targetName   String
