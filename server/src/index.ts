@@ -6,9 +6,12 @@ import dotenv from "dotenv";
 import express from "express";
 import {context} from "./context";
 import {resolvers, typeDefs} from "./schema";
+import {formatGraphQLError, validateEnv} from "./utils";
 
 
 dotenv.config();
+
+validateEnv()
 
 const PORT = process.env.PORT || 3000;
 
@@ -20,6 +23,7 @@ async function startServer() {
     const apolloServer = new ApolloServer({
         typeDefs,
         resolvers,
+        formatError: formatGraphQLError,
     });
 
     await apolloServer.start();

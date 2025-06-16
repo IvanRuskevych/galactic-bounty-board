@@ -2,7 +2,6 @@ import {ExpressContextFunctionArgument} from "@as-integrations/express5";
 import {prisma} from "./prisma";
 import {JwtPayload, tokenUtils} from "./utils";
 
-
 export interface Context {
     prisma: typeof prisma;
     currentUser?: JwtPayload;

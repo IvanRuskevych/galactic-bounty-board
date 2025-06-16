@@ -1,0 +1,6 @@
+export enum ENV_KEYS {
+    DATABASE_URL = "DATABASE_URL",
+    JWT_SECRET = "JWT_SECRET",
+    PORT = "PORT",
+    EXPIRES_IN = "EXPIRES_IN",
+}
