@@ -14,11 +14,17 @@ dotenv.config();
 validateEnv()
 
 const PORT = process.env.PORT || 3000;
+const CLIENT_URL = process.env.CLIENT_URL;
 
 async function startServer() {
     const app = express();
 
-    app.use(cors());
+    app.use(cors(
+        {
+            origin: CLIENT_URL,
+            credentials: true,
+        }
+    ));
 
     const apolloServer = new ApolloServer({
         typeDefs,

@@ -3,4 +3,5 @@ export enum ENV_KEYS {
     JWT_SECRET = "JWT_SECRET",
     PORT = "PORT",
     EXPIRES_IN = "EXPIRES_IN",
+    CLIENT_URL = "CLIENT_URL"
 }
