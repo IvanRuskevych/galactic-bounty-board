@@ -1,3 +1,3 @@
-export * from "./authService"
-export * from "./bountyService"
-export * from "./userService"
+export * from "./auth.service";
+export * from "./bounty.service";
+export * from "./user.service";
