@@ -1,21 +1,21 @@
 import {ExpressContextFunctionArgument} from "@as-integrations/express5";
 import {prisma} from "./prisma";
-import {JwtPayload, tokenUtils} from "./utils";
+import {JwtPayload, verifyAccessToken} from "./utils";
 
 export interface Context {
     prisma: typeof prisma;
     currentUser?: JwtPayload;
+    req: ExpressContextFunctionArgument["req"];
+    res: ExpressContextFunctionArgument["res"];
 }
 
-export const context = async ({req}: ExpressContextFunctionArgument): Promise<Context> => {
+export const context = async ({req, res}: ExpressContextFunctionArgument): Promise<Context> => {
     let currentUser;
-    const authToken = req.headers.authorization;
+    const accessToken = req.cookies?.accessToken;
 
-    if (authToken && authToken.startsWith("Bearer ")) {
-        const token = authToken.slice(7);
-
+    if (accessToken) {
         try {
-            currentUser = tokenUtils.verifyToken(token);
+            currentUser = verifyAccessToken(accessToken);
         } catch (err) {
             console.warn("Unable to authenticate token: ", err);
         }
@@ -24,5 +24,7 @@ export const context = async ({req}: ExpressContextFunctionArgument): Promise<Co
     return {
         prisma,
         currentUser,
+        req,
+        res,
     };
 };

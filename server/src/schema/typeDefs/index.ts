@@ -17,8 +17,30 @@ export const typeDefs = gql`
         reward: Int!
         createdBy: User!
         acceptedBy: User
-        createdById: String!
-        acceptedById: String!
+    }
+
+    type AuthPayload {
+        user: User!
+    }
+
+    type SuccessResponse {
+        success: Boolean!
+    }
+
+    input CreateBountyInput {
+        title: String!
+        description: String!
+        targetName: String!
+        planet: String!
+        reward: Int!
+    }
+
+    input UpdateBountyInput {
+        title: String
+        description: String
+        targetName: String
+        planet: String
+        reward: Int
     }
 
     type Query {
@@ -26,33 +48,14 @@ export const typeDefs = gql`
         allAvailableBounties: [Bounty!]!
     }
 
-    type AuthPayload {
-        token: String!
-        user: User!
-    }
-
     type Mutation {
         registerUser(email: String!, password: String!): AuthPayload!
-
         loginUser(email: String!, password: String!): AuthPayload!
-
-        createBounty(
-            title: String!,
-            description: String!,
-            targetName: String!,
-            planet: String!,
-            reward: Int!
-        ): Bounty!
-
-        updateBounty(
-            bountyId: ID!
-            title: String,
-            description: String,
-            targetName: String,
-            planet: String,
-            reward: Int
-        ): Bounty!
-
+        refreshAccessToken: SuccessResponse!
+        logout: SuccessResponse!
+        createBounty(data: CreateBountyInput): Bounty!
+        updateBounty(bountyId: ID!, data: UpdateBountyInput): Bounty!
         acceptBounty(bountyId: ID!): Bounty!
+        deleteBounty(bountyId: ID!): Bounty!
     }
-`
+`;

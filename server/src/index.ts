@@ -2,12 +2,12 @@ import {ApolloServer} from "@apollo/server";
 import {expressMiddleware} from "@as-integrations/express5";
 import bodyParser from "body-parser";
 import cors from "cors";
+import cookieParser from "cookie-parser"
 import dotenv from "dotenv";
 import express from "express";
 import {context} from "./context";
 import {resolvers, typeDefs} from "./schema";
 import {formatGraphQLError, validateEnv} from "./utils";
-
 
 dotenv.config();
 
@@ -25,6 +25,7 @@ async function startServer() {
             credentials: true,
         }
     ));
+    app.use(cookieParser());
 
     const apolloServer = new ApolloServer({
         typeDefs,

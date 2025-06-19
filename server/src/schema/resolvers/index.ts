@@ -1,91 +1,50 @@
-import {Bounty as PrismaBounty} from "@prisma/client";
-import {Context} from "../../context";
-import {User} from "../../generated/graphql";
-import {authService, AuthType, bountyService, userService} from "../../services";
-import {CreateBountyArgsType, UpdateBountyArgsType} from "../../types";
-import {ApiErrors, requireAuth, requireOwnership, validateInput} from "../../utils";
-import {CreateBountySchema, UpdateBountySchema, ValidateIdSchema} from "../../validations";
+import {Bounty as PrismaBounty, User as PrismaUser} from "@prisma/client";
+import {
+    MutationAcceptBountyArgs,
+    MutationCreateBountyArgs,
+    MutationDeleteBountyArgs,
+    MutationLoginUserArgs,
+    MutationRegisterUserArgs,
+    MutationUpdateBountyArgs,
+    Resolvers,
+} from "../../generated/graphql";
+import {authService, bountyService, userService} from "../../services";
 
-export const resolvers = {
+export const resolvers: Resolvers = {
     Query: {
-        currentUser: (_p: unknown, _args: unknown, ctx: Context) => {
-            requireAuth(ctx)
-            return userService.getById(ctx, ctx.currentUser!.id)
-        },
-
-        allAvailableBounties: (_p: unknown, _args: unknown, ctx: Context) => bountyService.getAllAvailable(ctx)
+        currentUser: (_p: unknown, _args: unknown, ctx) => userService.getById(ctx.currentUser!.id, ctx),
+        allAvailableBounties: (_p: unknown, _args: unknown, ctx) => bountyService.getAvailable(ctx),
     },
 
     Mutation: {
-        registerUser: (_p: unknown, args: AuthType, ctx: Context) => authService.register(ctx, args),
+        registerUser: (_p: unknown, args: MutationRegisterUserArgs, ctx) => authService.register(args, ctx),
+        loginUser: (_p: unknown, args: MutationLoginUserArgs, ctx) => authService.login(args, ctx),
+        logout: (_p: unknown, _args: unknown, ctx) => authService.logout(ctx),
+        refreshAccessToken: (_p: unknown, _args: unknown, ctx) => authService.refreshAccessToken(ctx),
 
-        loginUser: (_p: unknown, args: AuthType, ctx: Context) => authService.login(ctx, args),
-
-        createBounty: (_p: unknown, args: CreateBountyArgsType, ctx: Context) => {
-            requireAuth(ctx)
-            const validatedArgs = validateInput(CreateBountySchema, args);
-            return bountyService.create(ctx, validatedArgs)
-        },
-
-        updateBounty: async (_p: unknown, args: UpdateBountyArgsType, ctx: Context) => {
-            validateInput(ValidateIdSchema, {id: args.bountyId})
-
-            const bounty = await bountyService.getById(ctx, args.bountyId);
-            if (!bounty) {
-                throw ApiErrors.NotFound('Bounty not found');
-            }
-
-            requireOwnership(ctx.currentUser!.id, bounty.createdById);
-
-            validateInput(UpdateBountySchema, args)
-
-            return bountyService.updateById(ctx, args)
-        },
-
-        acceptBounty: async (_p: unknown, args: { bountyId: string }, ctx: Context) => {
-            requireAuth(ctx)
-            validateInput(ValidateIdSchema, {id: args.bountyId})
-
-            const bounty = await bountyService.getById(ctx, args.bountyId)
-
-            if (!bounty) {
-                throw ApiErrors.NotFound('Bounty not found');
-            }
-
-            if (bounty.acceptedById === ctx.currentUser!.id) {
-                throw ApiErrors.Conflict('You have already accepted this bounty');
-            }
-
-            if (bounty.acceptedById) {
-                throw ApiErrors.Conflict("Bounty already accepted");
-            }
-
-            if (bounty.createdById === ctx.currentUser!.id) {
-                throw ApiErrors.Forbidden('You cannot accept your own bounty');
-            }
-
-            return bountyService.acceptById(ctx, args.bountyId, ctx.currentUser!.id)
-        }
-
+        createBounty: (_p: unknown, args: MutationCreateBountyArgs, ctx) => bountyService.create(args, ctx),
+        updateBounty: (_p: unknown, args: MutationUpdateBountyArgs, ctx) => bountyService.update(args, ctx),
+        acceptBounty: (_p: unknown, args: MutationAcceptBountyArgs, ctx) => bountyService.accept(args, ctx),
+        deleteBounty: (_p: unknown, args: MutationDeleteBountyArgs, ctx) => bountyService.delete(args, ctx),
     },
 
     Bounty: {
-        createdBy: (parent: PrismaBounty, _args: unknown, ctx: Context) => {
-            return userService.getById(ctx, parent.createdById)
+        createdBy: (parent: PrismaBounty, _args: unknown, ctx) => {
+            return userService.getById(parent.createdById, ctx);
         },
 
-        acceptedBy: (parent: PrismaBounty, _args: unknown, ctx: Context) => {
+        acceptedBy: (parent: PrismaBounty, _args: unknown, ctx) => {
             if (!parent.acceptedById) return null;
-            return userService.getById(ctx, parent.acceptedById)
-        }
+            return userService.getById(parent.acceptedById, ctx);
+        },
     },
 
     User: {
-        bountiesCreated: (parent: User, _args: unknown, ctx: Context) => {
+        bountiesCreated: (parent: PrismaUser, _args: unknown, ctx) => {
             return ctx.prisma.bounty.findMany({where: {createdById: parent.id}});
         },
-        bountiesAccepted: (parent: User, _args: unknown, ctx: Context) => {
+        bountiesAccepted: (parent: PrismaUser, _args: unknown, ctx) => {
             return ctx.prisma.bounty.findMany({where: {acceptedById: parent.id}});
         },
-    }
-}
+    },
+};
