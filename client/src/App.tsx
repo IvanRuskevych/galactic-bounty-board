@@ -1,23 +1,21 @@
-import {Container, createTheme, CssBaseline, ThemeProvider} from '@mui/material'
-import {BountyList} from "./components/bounty/BountyList.tsx";
+import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
+import {Outlet} from "react-router-dom";
 
 const theme = createTheme({
     palette: {
-        mode: 'light',
-    }
-})
+        mode: "light",
+    },
+});
 
 function App() {
 
     return (
         <ThemeProvider theme={theme}>
-            <CssBaseline/>
-            <Container>
-                <h1>Galactic Bounty Board</h1>
-                <BountyList/>
-            </Container>
+            <CssBaseline />
+            <div>App</div>
+            <Outlet />
         </ThemeProvider>
-    )
+    );
 }
 
-export default App
+export default App;
