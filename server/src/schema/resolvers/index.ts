@@ -15,6 +15,7 @@ export const resolvers: Resolvers = {
     Query: {
         currentUser: (_p: unknown, _args: unknown, ctx: Context) => userService.getById(ctx.currentUser!.id, ctx),
         allAvailableBounties: (_p: unknown, _args: unknown, ctx: Context) => bountyService.getAvailable(ctx),
+        allCurrentUserBounties: (_p: unknown, _args: unknown, ctx: Context) => bountyService.getCurrentUserBounties(ctx),
     },
 
     Mutation: {

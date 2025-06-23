@@ -26,6 +26,12 @@ export const typeDefs = gql`
         status: BountyStatus!
     }
 
+    type CurrentUserBounties {
+        created: [Bounty!]!
+        posted: [Bounty!]!
+        accepted: [Bounty!]!
+    }
+
     type AuthPayload {
         user: User!
     }
@@ -54,6 +60,7 @@ export const typeDefs = gql`
     type Query {
         currentUser: User
         allAvailableBounties: [Bounty!]!
+        allCurrentUserBounties: CurrentUserBounties!
     }
 
     type Mutation {

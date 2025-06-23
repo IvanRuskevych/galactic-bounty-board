@@ -6,6 +6,7 @@ import {
     MutationUpdateBountyArgs,
 } from "../generated/graphql";
 import {bountyRepository} from "../repositories";
+import {BountyStatus} from "../shared/constants";
 import {requireAuth, requireNotOwnership, requireOwnership, validateInput} from "../utils";
 import {
     checkCanAcceptBounty,
@@ -86,4 +87,12 @@ export const bountyService = {
         return bountyRepository.accept(ctx.prisma, args.bountyId, ctx.currentUser!.id);
     },
 
+    getCurrentUserBounties: async (ctx: Context) => {
+        requireAuth(ctx);
+        const created = await bountyRepository.getByStatusAndUser(ctx.prisma, ctx.currentUser!.id, BountyStatus.CREATED);
+        const posted = await bountyRepository.getByStatusAndUser(ctx.prisma, ctx.currentUser!.id, BountyStatus.POSTED);
+        const accepted = await bountyRepository.getAcceptedByUser(ctx.prisma, ctx.currentUser!.id);
+
+        return {created, accepted, posted};
+    },
 };
