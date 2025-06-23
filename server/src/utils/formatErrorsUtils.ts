@@ -1,14 +1,14 @@
-import {GraphQLFormattedError} from 'graphql';
+import {GraphQLFormattedError} from "graphql";
 
 export function formatGraphQLError(
     formattedError: GraphQLFormattedError,
-    error: unknown
+    error: unknown,
 ): GraphQLFormattedError {
-    console.error('GraphQL error:', error);
+    console.error("GraphQL error:", error);
 
     if (
-        typeof formattedError.extensions?.code === 'string' &&
-        typeof formattedError.extensions?.status === 'number'
+        typeof formattedError.extensions?.code === "string" &&
+        typeof formattedError.extensions?.status === "number"
     ) {
         return formattedError;
     }
@@ -17,7 +17,7 @@ export function formatGraphQLError(
         ...formattedError,
         extensions: {
             ...formattedError.extensions,
-            code: formattedError.extensions?.code || 'INTERNAL_SERVER_ERROR',
+            code: formattedError.extensions?.code || "INTERNAL_SERVER_ERROR",
             status: formattedError.extensions?.status || 500,
         },
     };
