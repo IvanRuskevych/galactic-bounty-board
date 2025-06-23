@@ -23,14 +23,21 @@ model User {
 }
 
 model Bounty {
-  id           String  @id @default(uuid(4))
+  id           String       @id @default(uuid(4))
   title        String
   description  String
   targetName   String
   planet       String
   reward       Int
-  createdBy    User    @relation("CreatedBounties", fields: [createdById], references: [id])
+  createdBy    User         @relation("CreatedBounties", fields: [createdById], references: [id])
   createdById  String
-  acceptedBy   User?   @relation("AcceptedBounties", fields: [acceptedById], references: [id])
+  acceptedBy   User?        @relation("AcceptedBounties", fields: [acceptedById], references: [id])
   acceptedById String?
+  status       BountyStatus @default(CREATED)
+}
+
+enum BountyStatus {
+  CREATED
+  POSTED
+  ACCEPTED
 }

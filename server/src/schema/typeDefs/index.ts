@@ -1,6 +1,12 @@
 import gql from "graphql-tag";
 
 export const typeDefs = gql`
+    enum BountyStatus {
+        CREATED
+        POSTED
+        ACCEPTED
+    }
+
     type User {
         id: ID!
         email: String!
@@ -17,6 +23,13 @@ export const typeDefs = gql`
         reward: Int!
         createdBy: User!
         acceptedBy: User
+        status: BountyStatus!
+    }
+
+    type CurrentUserBounties {
+        created: [Bounty!]!
+        posted: [Bounty!]!
+        accepted: [Bounty!]!
     }
 
     type AuthPayload {
@@ -41,11 +54,13 @@ export const typeDefs = gql`
         targetName: String
         planet: String
         reward: Int
+        status: BountyStatus
     }
 
     type Query {
         currentUser: User
         allAvailableBounties: [Bounty!]!
+        allCurrentUserBounties: CurrentUserBounties!
     }
 
     type Mutation {
@@ -56,6 +71,7 @@ export const typeDefs = gql`
         createBounty(data: CreateBountyInput): Bounty!
         updateBounty(bountyId: ID!, data: UpdateBountyInput): Bounty!
         acceptBounty(bountyId: ID!): Bounty!
+        postBounty(bountyId: ID!): Bounty!
         deleteBounty(bountyId: ID!): Bounty!
     }
 `;
