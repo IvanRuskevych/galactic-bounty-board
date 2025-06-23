@@ -33,9 +33,16 @@ export type Bounty = {
   id: Scalars['ID']['output'];
   planet: Scalars['String']['output'];
   reward: Scalars['Int']['output'];
+  status: BountyStatus;
   targetName: Scalars['String']['output'];
   title: Scalars['String']['output'];
 };
+
+export enum BountyStatus {
+  Accepted = 'ACCEPTED',
+  Created = 'CREATED',
+  Posted = 'POSTED'
+}
 
 export type CreateBountyInput = {
   description: Scalars['String']['input'];
@@ -105,6 +112,7 @@ export type UpdateBountyInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   planet?: InputMaybe<Scalars['String']['input']>;
   reward?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<BountyStatus>;
   targetName?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -192,6 +200,7 @@ export type ResolversTypes = ResolversObject<{
   AuthPayload: ResolverTypeWrapper<Omit<AuthPayload, 'user'> & { user: ResolversTypes['User'] }>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Bounty: ResolverTypeWrapper<Bounty>;
+  BountyStatus: BountyStatus;
   CreateBountyInput: CreateBountyInput;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
@@ -231,6 +240,7 @@ export type BountyResolvers<ContextType = Context, ParentType extends ResolversP
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   planet?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   reward?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['BountyStatus'], ParentType, ContextType>;
   targetName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
