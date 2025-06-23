@@ -7,7 +7,12 @@ import {
 } from "../generated/graphql";
 import {bountyRepository} from "../repositories";
 import {requireAuth, requireNotOwnership, requireOwnership, validateInput} from "../utils";
-import {checkBountyNotAccepted, getBountyOrFail} from "../utils/bountyUtils";
+import {
+    checkCanAcceptBounty,
+    checkCanPostBounty,
+    checkCanUpdateDeleteBounty,
+    getBountyOrFail,
+} from "../utils/bountyUtils";
 import {CreateBountySchema, UpdateBountySchema, ValidateIdSchema} from "../validations";
 
 export const bountyService = {
@@ -34,7 +39,7 @@ export const bountyService = {
         const bounty = await getBountyOrFail(ctx, args.bountyId);
 
         requireOwnership(ctx.currentUser!.id, bounty.createdById);
-        checkBountyNotAccepted(bounty.acceptedById);
+        checkCanUpdateDeleteBounty(bounty.status);
 
         const data = validateInput(UpdateBountySchema, args.data);
 
@@ -48,13 +53,22 @@ export const bountyService = {
         const bounty = await getBountyOrFail(ctx, args.bountyId);
 
         requireOwnership(ctx.currentUser!.id, bounty.createdById);
-        checkBountyNotAccepted(bounty.acceptedById);
+        checkCanUpdateDeleteBounty(bounty.status);
 
         return bountyRepository.delete(ctx.prisma, args.bountyId);
     },
 
     getAvailable: (ctx: Context) =>
         bountyRepository.getAvailable(ctx.prisma),
+
+    post: async (args: { bountyId: string }, ctx: Context) => {
+        requireAuth(ctx);
+        const bounty = await getBountyOrFail(ctx, args.bountyId);
+        requireOwnership(ctx.currentUser!.id, bounty.createdById);
+        checkCanPostBounty(bounty.status);
+
+        return bountyRepository.post(ctx.prisma, args.bountyId);
+    },
 
     accept: async (
         args: MutationAcceptBountyArgs,
@@ -67,8 +81,9 @@ export const bountyService = {
         const bounty = await getBountyOrFail(ctx, args.bountyId);
 
         requireNotOwnership(ctx.currentUser!.id, bounty.createdById);
-        checkBountyNotAccepted(bounty.acceptedById);
+        checkCanAcceptBounty(bounty.status);
 
         return bountyRepository.accept(ctx.prisma, args.bountyId, ctx.currentUser!.id);
     },
+
 };

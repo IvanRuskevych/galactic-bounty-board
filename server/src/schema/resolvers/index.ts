@@ -1,4 +1,5 @@
 import {Bounty as PrismaBounty, User as PrismaUser} from "@prisma/client";
+import {Context} from "src/context";
 import {
     MutationAcceptBountyArgs,
     MutationCreateBountyArgs,
@@ -12,38 +13,39 @@ import {authService, bountyService, userService} from "../../services";
 
 export const resolvers: Resolvers = {
     Query: {
-        currentUser: (_p: unknown, _args: unknown, ctx) => userService.getById(ctx.currentUser!.id, ctx),
-        allAvailableBounties: (_p: unknown, _args: unknown, ctx) => bountyService.getAvailable(ctx),
+        currentUser: (_p: unknown, _args: unknown, ctx: Context) => userService.getById(ctx.currentUser!.id, ctx),
+        allAvailableBounties: (_p: unknown, _args: unknown, ctx: Context) => bountyService.getAvailable(ctx),
     },
 
     Mutation: {
-        registerUser: (_p: unknown, args: MutationRegisterUserArgs, ctx) => authService.register(args, ctx),
-        loginUser: (_p: unknown, args: MutationLoginUserArgs, ctx) => authService.login(args, ctx),
-        logout: (_p: unknown, _args: unknown, ctx) => authService.logout(ctx),
-        refreshAccessToken: (_p: unknown, _args: unknown, ctx) => authService.refreshAccessToken(ctx),
+        registerUser: (_p: unknown, args: MutationRegisterUserArgs, ctx: Context) => authService.register(args, ctx),
+        loginUser: (_p: unknown, args: MutationLoginUserArgs, ctx: Context) => authService.login(args, ctx),
+        logout: (_p: unknown, _args: unknown, ctx: Context) => authService.logout(ctx),
+        refreshAccessToken: (_p: unknown, _args: unknown, ctx: Context) => authService.refreshAccessToken(ctx),
 
-        createBounty: (_p: unknown, args: MutationCreateBountyArgs, ctx) => bountyService.create(args, ctx),
-        updateBounty: (_p: unknown, args: MutationUpdateBountyArgs, ctx) => bountyService.update(args, ctx),
-        acceptBounty: (_p: unknown, args: MutationAcceptBountyArgs, ctx) => bountyService.accept(args, ctx),
-        deleteBounty: (_p: unknown, args: MutationDeleteBountyArgs, ctx) => bountyService.delete(args, ctx),
+        createBounty: (_p: unknown, args: MutationCreateBountyArgs, ctx: Context) => bountyService.create(args, ctx),
+        updateBounty: (_p: unknown, args: MutationUpdateBountyArgs, ctx: Context) => bountyService.update(args, ctx),
+        acceptBounty: (_p: unknown, args: MutationAcceptBountyArgs, ctx: Context) => bountyService.accept(args, ctx),
+        postBounty: (_p: unknown, args: MutationAcceptBountyArgs, ctx: Context) => bountyService.post(args, ctx),
+        deleteBounty: (_p: unknown, args: MutationDeleteBountyArgs, ctx: Context) => bountyService.delete(args, ctx),
     },
 
     Bounty: {
-        createdBy: (parent: PrismaBounty, _args: unknown, ctx) => {
+        createdBy: (parent: PrismaBounty, _args: unknown, ctx: Context) => {
             return userService.getById(parent.createdById, ctx);
         },
 
-        acceptedBy: (parent: PrismaBounty, _args: unknown, ctx) => {
+        acceptedBy: (parent: PrismaBounty, _args: unknown, ctx: Context) => {
             if (!parent.acceptedById) return null;
             return userService.getById(parent.acceptedById, ctx);
         },
     },
 
     User: {
-        bountiesCreated: (parent: PrismaUser, _args: unknown, ctx) => {
+        bountiesCreated: (parent: PrismaUser, _args: unknown, ctx: Context) => {
             return ctx.prisma.bounty.findMany({where: {createdById: parent.id}});
         },
-        bountiesAccepted: (parent: PrismaUser, _args: unknown, ctx) => {
+        bountiesAccepted: (parent: PrismaUser, _args: unknown, ctx: Context) => {
             return ctx.prisma.bounty.findMany({where: {acceptedById: parent.id}});
         },
     },

@@ -24,6 +24,17 @@ export const bountyRepository = {
     accept: (prisma: PrismaClient, bountyId: string, userId: string) =>
         prisma.bounty.update({
             where: {id: bountyId},
-            data: {acceptedById: userId},
+            data: {
+                acceptedById: userId,
+                status: "ACCEPTED",
+            },
+        }),
+
+    post: (prisma: PrismaClient, bountyId: string) =>
+        prisma.bounty.update({
+            where: {id: bountyId},
+            data: {
+                status: "POSTED",
+            },
         }),
 };

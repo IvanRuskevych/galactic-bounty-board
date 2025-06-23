@@ -9,7 +9,16 @@ export async function getBountyOrFail(ctx: Context, bountyId: string) {
     return bounty;
 }
 
-export function checkBountyNotAccepted(acceptedById: string | null) {
-    if (acceptedById) throw ApiErrors.Conflict("Couldn't perform action. Bounty was accepted.");
+export function checkCanPostBounty(status: string) {
+    if (status === "POSTED") throw ApiErrors.Conflict("Couldn't perform action. Bounty is already posted.");
+    if (status === "ACCEPTED") throw ApiErrors.Conflict("Couldn't perform action. Bounty is already accepted.");
+}
 
+export function checkCanAcceptBounty(status: string) {
+    if (status === "CREATED") throw ApiErrors.Conflict("Couldn't perform action. Bounty is not posted yet.");
+    if (status === "ACCEPTED") throw ApiErrors.Conflict("Couldn't perform action. Bounty is already accepted.");
+}
+
+export function checkCanUpdateDeleteBounty(status: string) {
+    if (status === "ACCEPTED") throw ApiErrors.Conflict("Couldn't perform action. Bounty is already accepted.");
 }
