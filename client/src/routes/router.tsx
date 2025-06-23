@@ -1,5 +1,5 @@
 import {createBrowserRouter, createRoutesFromElements, Navigate, Route} from "react-router-dom";
-import App from "../App.tsx";
+import App from "../modules/app/app.module.tsx";
 import {ROUTER_KEYS} from "../shared/keys";
 import {adminRoutes} from "./admin.routes.tsx";
 import {privateRoutes} from "./privat.routes.tsx";

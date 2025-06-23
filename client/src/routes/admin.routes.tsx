@@ -1,5 +1,5 @@
 import {Route} from "react-router-dom";
-import {Admin} from "../components/pages";
+import {Admin} from "../modules";
 import {ROUTER_KEYS} from "../shared/keys";
 import {PrivateRoutes} from "./routes.tsx";
 

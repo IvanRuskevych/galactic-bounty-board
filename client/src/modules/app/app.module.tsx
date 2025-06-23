@@ -1,5 +1,6 @@
-import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
+import {Container, createTheme, CssBaseline, ThemeProvider} from "@mui/material";
 import {Outlet} from "react-router-dom";
+import {Header} from "../header/Header.tsx";
 
 const theme = createTheme({
     palette: {
@@ -12,8 +13,10 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <div>App</div>
-            <Outlet />
+            <Header />
+            <Container maxWidth="lg">
+                <Outlet />
+            </Container>
         </ThemeProvider>
     );
 }

@@ -1,8 +1,8 @@
 import {create} from "zustand";
 import {persist} from "zustand/middleware";
 import {AuthService} from "../services";
-import type {AuthStore} from "../types";
-import {handleApolloError} from "../utils";
+import {handleApolloError} from "../shared/utils";
+import type {AuthStore} from "../typings";
 
 export const useAuthStore = create<AuthStore>()(
     persist(

@@ -1,5 +1,5 @@
 import {ApolloError} from "@apollo/client";
-import type {GraphQLErrorExtensions} from "../types";
+import type {GraphQLErrorExtensions} from "../../typings";
 
 interface ErrorHandlerResult {
     fieldErrors: Record<string, string[]> | null;
