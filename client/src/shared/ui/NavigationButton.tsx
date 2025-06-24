@@ -13,7 +13,7 @@ export const NavigationButton: FC<NavigationButtonProps> = ({to, label, ...props
             color="inherit"
             component={RouterLink}
             to={to}
-            sx={{textTransform: "none"}}
+            sx={{textTransform: "none", minWidth: "auto"}}
             {...props}
         >
             {label}

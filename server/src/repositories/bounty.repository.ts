@@ -10,9 +10,7 @@ export const bountyRepository = {
     getAvailable: (prisma: PrismaClient) =>
         prisma.bounty.findMany({
             where: {
-                acceptedById: {
-                    equals: null,
-                },
+                status: BountyStatus.POSTED,
             },
         }),
 

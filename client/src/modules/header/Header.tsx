@@ -17,18 +17,18 @@ export const Header = () => {
         <AppBar position="static">
             <Toolbar sx={{display: "flex", justifyContent: "space-between"}}>
                 {/* Left: Logo */}
-                <Typography variant="h6">
+                <Typography variant="h6" sx={{textAlign: "center"}}>
                     <NavigationButton to={ROUTER_KEYS.HOME} label="Galactic Bounty Board" />
                 </Typography>
 
                 {/* Center: Navigation buttons */}
-                <Box sx={{display: "flex", gap: 2}}>
+                <Box sx={{display: "flex", textAlign: "center"}}>
                     <NavigationButton to={ROUTER_KEYS.HOME} label="Public Bounties" />
                     {isAuth && <NavigationButton to={ROUTER_KEYS.DASHBOARD} label="My Bounties" />}
                 </Box>
 
                 {/* Right: Auth buttons */}
-                <Box sx={{display: "flex", gap: 1}}>
+                <Box>
                     {isAuth ?
                         (<AuthButton type="logout" onClick={handleLogout} />) :
                         (<NavigationButton to={ROUTER_KEYS.LOGIN} label="Login" />)}
