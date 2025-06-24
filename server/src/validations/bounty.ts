@@ -8,8 +8,8 @@ const BountyBaseSchema = {
     .min(10, {message: "Description must be at least 10 characters"})
     .max(255, {message: "Description must not exceed 255 characters"}),
   targetId: z
-    .number({invalid_type_error: "Reward must be a number"})
-    .int({message: "Reward must be an integer"}),
+    .number({invalid_type_error: "TargetId must be a number"})
+    .int({message: "TargetId must be an integer"}),
   planet: z.string().min(2, {message: "Planet must be at least 2 characters"}),
   reward: z
     .number({invalid_type_error: "Reward must be a number"})
