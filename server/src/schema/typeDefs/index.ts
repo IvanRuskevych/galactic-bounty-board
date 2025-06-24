@@ -43,7 +43,7 @@ export const typeDefs = gql`
     input CreateBountyInput {
         title: String!
         description: String!
-        targetId: String!
+        targetId: Int!
         planet: String!
         reward: Int!
     }
@@ -51,7 +51,7 @@ export const typeDefs = gql`
     input UpdateBountyInput {
         title: String
         description: String
-        targetId: String
+        targetId: Int
         planet: String
         reward: Int
         status: BountyStatus

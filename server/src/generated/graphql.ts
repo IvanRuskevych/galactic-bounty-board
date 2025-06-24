@@ -1,7 +1,8 @@
+// @ts-ignore
+import { Bounty, User } from '@prisma/client';
 import { GraphQLResolveInfo } from 'graphql';
-import { User, Bounty } from '@prisma/client';
 import { Context } from '../context';
-import gql from 'graphql-tag';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -48,7 +49,7 @@ export type CreateBountyInput = {
   description: Scalars['String']['input'];
   planet: Scalars['String']['input'];
   reward: Scalars['Int']['input'];
-  targetId: Scalars['String']['input'];
+  targetId: Scalars['Int']['input'];
   title: Scalars['String']['input'];
 };
 
@@ -127,7 +128,7 @@ export type UpdateBountyInput = {
   planet?: InputMaybe<Scalars['String']['input']>;
   reward?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<BountyStatus>;
-  targetId?: InputMaybe<Scalars['String']['input']>;
+  targetId?: InputMaybe<Scalars['Int']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -148,27 +149,29 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+  ResolverFn<TResult, TParent, TContext, TArgs>
+  | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => Promise<TResult> | TResult;
 
 export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>;
 
 export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
@@ -192,7 +195,7 @@ export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TCo
 export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   parent: TParent,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
 export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
@@ -204,9 +207,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>;
-
 
 
 /** Mapping between all available schema types and the resolvers types */
@@ -216,7 +218,11 @@ export type ResolversTypes = ResolversObject<{
   Bounty: ResolverTypeWrapper<Bounty>;
   BountyStatus: BountyStatus;
   CreateBountyInput: CreateBountyInput;
-  CurrentUserBounties: ResolverTypeWrapper<Omit<CurrentUserBounties, 'accepted' | 'created' | 'posted'> & { accepted: Array<ResolversTypes['Bounty']>, created: Array<ResolversTypes['Bounty']>, posted: Array<ResolversTypes['Bounty']> }>;
+  CurrentUserBounties: ResolverTypeWrapper<Omit<CurrentUserBounties, 'accepted' | 'created' | 'posted'> & {
+    accepted: Array<ResolversTypes['Bounty']>,
+    created: Array<ResolversTypes['Bounty']>,
+    posted: Array<ResolversTypes['Bounty']>
+  }>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -233,7 +239,11 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
   Bounty: Bounty;
   CreateBountyInput: CreateBountyInput;
-  CurrentUserBounties: Omit<CurrentUserBounties, 'accepted' | 'created' | 'posted'> & { accepted: Array<ResolversParentTypes['Bounty']>, created: Array<ResolversParentTypes['Bounty']>, posted: Array<ResolversParentTypes['Bounty']> };
+  CurrentUserBounties: Omit<CurrentUserBounties, 'accepted' | 'created' | 'posted'> & {
+    accepted: Array<ResolversParentTypes['Bounty']>,
+    created: Array<ResolversParentTypes['Bounty']>,
+    posted: Array<ResolversParentTypes['Bounty']>
+  };
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Mutation: {};
