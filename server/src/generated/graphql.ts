@@ -34,7 +34,7 @@ export type Bounty = {
   planet: Scalars['String']['output'];
   reward: Scalars['Int']['output'];
   status: BountyStatus;
-  targetName: Scalars['String']['output'];
+  targetId: Scalars['Int']['output'];
   title: Scalars['String']['output'];
 };
 
@@ -48,8 +48,15 @@ export type CreateBountyInput = {
   description: Scalars['String']['input'];
   planet: Scalars['String']['input'];
   reward: Scalars['Int']['input'];
-  targetName: Scalars['String']['input'];
+  targetId: Scalars['String']['input'];
   title: Scalars['String']['input'];
+};
+
+export type CurrentUserBounties = {
+  __typename?: 'CurrentUserBounties';
+  accepted: Array<Bounty>;
+  created: Array<Bounty>;
+  posted: Array<Bounty>;
 };
 
 export type Mutation = {
@@ -59,6 +66,7 @@ export type Mutation = {
   deleteBounty: Bounty;
   loginUser: AuthPayload;
   logout: SuccessResponse;
+  postBounty: Bounty;
   refreshAccessToken: SuccessResponse;
   registerUser: AuthPayload;
   updateBounty: Bounty;
@@ -86,6 +94,11 @@ export type MutationLoginUserArgs = {
 };
 
 
+export type MutationPostBountyArgs = {
+  bountyId: Scalars['ID']['input'];
+};
+
+
 export type MutationRegisterUserArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -100,6 +113,7 @@ export type MutationUpdateBountyArgs = {
 export type Query = {
   __typename?: 'Query';
   allAvailableBounties: Array<Bounty>;
+  allCurrentUserBounties: CurrentUserBounties;
   currentUser: Maybe<User>;
 };
 
@@ -113,7 +127,7 @@ export type UpdateBountyInput = {
   planet?: InputMaybe<Scalars['String']['input']>;
   reward?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<BountyStatus>;
-  targetName?: InputMaybe<Scalars['String']['input']>;
+  targetId?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -202,6 +216,7 @@ export type ResolversTypes = ResolversObject<{
   Bounty: ResolverTypeWrapper<Bounty>;
   BountyStatus: BountyStatus;
   CreateBountyInput: CreateBountyInput;
+  CurrentUserBounties: ResolverTypeWrapper<Omit<CurrentUserBounties, 'accepted' | 'created' | 'posted'> & { accepted: Array<ResolversTypes['Bounty']>, created: Array<ResolversTypes['Bounty']>, posted: Array<ResolversTypes['Bounty']> }>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -218,6 +233,7 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
   Bounty: Bounty;
   CreateBountyInput: CreateBountyInput;
+  CurrentUserBounties: Omit<CurrentUserBounties, 'accepted' | 'created' | 'posted'> & { accepted: Array<ResolversParentTypes['Bounty']>, created: Array<ResolversParentTypes['Bounty']>, posted: Array<ResolversParentTypes['Bounty']> };
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Mutation: {};
@@ -241,8 +257,15 @@ export type BountyResolvers<ContextType = Context, ParentType extends ResolversP
   planet?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   reward?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['BountyStatus'], ParentType, ContextType>;
-  targetName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  targetId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type CurrentUserBountiesResolvers<ContextType = Context, ParentType extends ResolversParentTypes['CurrentUserBounties'] = ResolversParentTypes['CurrentUserBounties']> = ResolversObject<{
+  accepted?: Resolver<Array<ResolversTypes['Bounty']>, ParentType, ContextType>;
+  created?: Resolver<Array<ResolversTypes['Bounty']>, ParentType, ContextType>;
+  posted?: Resolver<Array<ResolversTypes['Bounty']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -252,6 +275,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   deleteBounty?: Resolver<ResolversTypes['Bounty'], ParentType, ContextType, RequireFields<MutationDeleteBountyArgs, 'bountyId'>>;
   loginUser?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'email' | 'password'>>;
   logout?: Resolver<ResolversTypes['SuccessResponse'], ParentType, ContextType>;
+  postBounty?: Resolver<ResolversTypes['Bounty'], ParentType, ContextType, RequireFields<MutationPostBountyArgs, 'bountyId'>>;
   refreshAccessToken?: Resolver<ResolversTypes['SuccessResponse'], ParentType, ContextType>;
   registerUser?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationRegisterUserArgs, 'email' | 'password'>>;
   updateBounty?: Resolver<ResolversTypes['Bounty'], ParentType, ContextType, RequireFields<MutationUpdateBountyArgs, 'bountyId'>>;
@@ -259,6 +283,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   allAvailableBounties?: Resolver<Array<ResolversTypes['Bounty']>, ParentType, ContextType>;
+  allCurrentUserBounties?: Resolver<ResolversTypes['CurrentUserBounties'], ParentType, ContextType>;
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
 }>;
 
@@ -278,6 +303,7 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
 export type Resolvers<ContextType = Context> = ResolversObject<{
   AuthPayload?: AuthPayloadResolvers<ContextType>;
   Bounty?: BountyResolvers<ContextType>;
+  CurrentUserBounties?: CurrentUserBountiesResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SuccessResponse?: SuccessResponseResolvers<ContextType>;
