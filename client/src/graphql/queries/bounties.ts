@@ -1,10 +1,10 @@
-import {gql} from "@apollo/client";
+import { gql } from "@apollo/client";
 
 export const GET_AVAILABLE_BOUNTIES = gql`
     query GetAvailableBounties {
         allAvailableBounties {
             title
-            targetName
+            targetId
             reward
             planet
             id
@@ -22,7 +22,7 @@ export const GET_CURRENT_USER_BOUNTIES = gql`
         allCurrentUserBounties {
             posted {
                 title
-                targetName
+                targetId
                 status
                 reward
                 planet
@@ -34,7 +34,7 @@ export const GET_CURRENT_USER_BOUNTIES = gql`
             }
             created {
                 title
-                targetName
+                targetId
                 status
                 reward
                 planet
@@ -46,7 +46,7 @@ export const GET_CURRENT_USER_BOUNTIES = gql`
             }
             accepted {
                 title
-                targetName
+                targetId
                 status
                 reward
                 planet

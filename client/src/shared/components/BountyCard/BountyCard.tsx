@@ -1,6 +1,7 @@
 import { Box, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
 import type { Bounty } from "../../../generated/graphql";
-import { useAuthStore } from "../../../store";
+import { useAuthStore, useStarWarsStore } from "../../../store";
+import { BountyStatus } from "../../constants";
 import { BountyCardActionButton } from "../../ui";
 
 interface BountyCardProps {
@@ -19,26 +20,28 @@ export const BountyCard = ({
   onDelete,
 }: BountyCardProps) => {
   const {isAuth} = useAuthStore();
+  const {getCharacterById} = useStarWarsStore()
+  const target = getCharacterById(bounty.targetId)
   
   const renderActions = () => {
     if (!isAuth) return null;
     
     switch (bounty.status) {
-      case "CREATED":
+      case BountyStatus.CREATED:
         return (
           <>
             {onEdit && <BountyCardActionButton label={"Post"} color={"warning"}/>}
             {onPost && <BountyCardActionButton label={"Edit"} color={"primary"}/>}
           </>
         );
-      case "POSTED":
+      case BountyStatus.POSTED:
         return (
           <>
             {onEdit && <BountyCardActionButton label={"Edit"} color="warning"/>}
             {onAccept && <BountyCardActionButton label={"Accept"} color="success"/>}
           </>
         );
-      case "ACCEPTED":
+      case BountyStatus.ACCEPTED:
         return (
           <>
             <Box
@@ -61,21 +64,17 @@ export const BountyCard = ({
   }
   
   return (
-    <Card
-      sx={{
-        maxWidth: 345,
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-      }}>
+    <Card sx={{width: 250, height: "100%", display: "flex", flexDirection: "column"}}>
       <CardActionArea>
         <CardMedia
           component="img"
-          height="140"
-          image={`https://vignette.wikia.nocookie.net/starwars/images/2/20/LukeTLJ.jpg`}
+          height="160"
+          image={target?.image}
           alt={bounty.planet}
+          sx={{objectFit: "contain"}}
         />
-        <CardContent>
+        <CardContent sx={{height: "100%", minHeight: 250}}
+        >
           <Typography
             gutterBottom
             variant="h5"
@@ -91,7 +90,7 @@ export const BountyCard = ({
             {bounty.title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Target: {bounty.targetName}
+            Target: {target?.name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Planet: {bounty.planet}
@@ -99,11 +98,9 @@ export const BountyCard = ({
           <Typography variant="body2" color="text.secondary">
             Reward: {bounty.reward} credits
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Status: {bounty.status}
-          </Typography>
+          
           {isAuth && (
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="body2" color="text.secondary">
               Owner: {bounty.createdBy?.email}
             </Typography>
           )}
@@ -116,6 +113,7 @@ export const BountyCard = ({
               display: "-webkit-box",
               WebkitLineClamp: 4,
               WebkitBoxOrient: "vertical",
+              mt: 1,
             }}
           >
             {bounty.description}

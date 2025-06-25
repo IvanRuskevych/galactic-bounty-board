@@ -11,16 +11,15 @@ export const PublicDashboard = () => {
     fetchPublicBounties();
   }, [fetchPublicBounties]);
   
-  if (loading) return <CircularProgress/>;
-  if (error) return <Typography color="error">{error}</Typography>;
-  if (bounties.length === 0) return <Typography>No bounties found.</Typography>;
-  
   return (
     <Container>
-      <Typography variant="h4" sx={{my: 2}}>
+      <Typography variant="h4">
         Available Bounties
       </Typography>
       <BountyList bounties={bounties}/>
+      {bounties.length === 0 && <Typography>No bounties found.</Typography>}
+      {error && <Typography color="error">{error}</Typography>}
+      {loading && <CircularProgress/>}
     </Container>
   );
 };

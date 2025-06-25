@@ -1,8 +1,8 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
-import { BountyList } from "../../shared/components";
+import { BountyDialog, BountyList } from "../../shared/components";
 import { filterBounties } from "../../shared/utils";
-import { useBountyStore } from "../../store";
+import { useBountyStore, useStarWarsStore } from "../../store";
 
 const FILTERS = ["ALL", "CREATED", "POSTED", "ACCEPTED"] as const;
 type FilterType = typeof FILTERS[number];
@@ -14,9 +14,12 @@ export const HunterDashboard = () => {
     accepted = [],
     fetchCurrentUserBounties,
   } = useBountyStore();
+  const {fetchCharacters} = useStarWarsStore();
+  
   
   const [filter, setFilter] = useState<FilterType>("ALL");
   const [search, setSearch] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
   
   const allBounties = [...created, ...posted, ...accepted];
   const filteredBounties = useMemo(() => {
@@ -25,47 +28,54 @@ export const HunterDashboard = () => {
   
   useEffect(() => {
     fetchCurrentUserBounties();
-  }, [fetchCurrentUserBounties]);
+    fetchCharacters()
+  }, [fetchCurrentUserBounties, fetchCharacters]);
   
   return (
-    <Container>
-      <Typography variant="h4" sx={{my: 2}}>
-        My Bounties
-      </Typography>
-      
-      <Box
-        display="flex"
-        gap={1}
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-        flexDirection={{xs: "column", md: "row"}}
-      >
-        <TextField
-          label="Search"
-          variant="outlined"
-          size="small"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          sx={{width: "100%", maxWidth: {xs: 250}}}
-        />
-        
-        <Box display="flex" gap={1} flexWrap="wrap" justifyContent={{xs: "center", sm: "flex-start"}}>
-          {FILTERS.map((type) => (
-            <Button
-              key={type}
-              variant={filter === type ? "contained" : "outlined"}
-              onClick={() => setFilter(type)}
-            >
-              {type}
-            </Button>
-          ))}
+    <>
+      <Container>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h4">My Bounties</Typography>
+          <Button variant="contained" onClick={() => setDialogOpen(true)}>
+            Create Bounty
+          </Button>
         </Box>
-      </Box>
-      
-      <BountyList bounties={filteredBounties}/>
-      {filteredBounties.length === 0 && <Typography>No bounties found.</Typography>}
-    </Container>
+        
+        <Box
+          display="flex"
+          gap={1}
+          justifyContent="space-between"
+          alignItems="center"
+          mb={2}
+          flexDirection={{xs: "column", md: "row"}}
+        >
+          <TextField
+            label="Search"
+            variant="outlined"
+            size="small"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            sx={{width: "100%", maxWidth: {xs: 250}}}
+          />
+          
+          <Box display="flex" gap={1} flexWrap="wrap" justifyContent={{xs: "center", sm: "flex-start"}}>
+            {FILTERS.map((type) => (
+              <Button
+                key={type}
+                variant={filter === type ? "contained" : "outlined"}
+                onClick={() => setFilter(type)}
+              >
+                {type}
+              </Button>
+            ))}
+          </Box>
+        </Box>
+        
+        <BountyList bounties={filteredBounties}/>
+        {filteredBounties.length === 0 && <Typography>No bounties found.</Typography>}
+      </Container>
+      <BountyDialog open={dialogOpen} onClose={() => setDialogOpen(false)}/>
+    </>
   );
 };
 

@@ -17,7 +17,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline/>
       <Header/>
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{py: 3}}>
         <Outlet/>
       </Container>
     </ThemeProvider>
