@@ -152,7 +152,7 @@ export type LoginUserMutationVariables = Exact<{
 }>;
 
 
-export type LoginUserMutation = { __typename?: 'Mutation', loginUser: { __typename?: 'AuthPayload', user: { __typename?: 'User', email: string, id: string } } };
+export type LoginUserMutation = { __typename?: 'Mutation', loginUser: { __typename?: 'AuthPayload', user: { __typename?: 'User', id: string, email: string } } };
 
 export type LogoutUserMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -166,32 +166,56 @@ export type CreateBountyMutationVariables = Exact<{
 
 export type CreateBountyMutation = { __typename?: 'Mutation', createBounty: { __typename?: 'Bounty', title: string, targetId: number, status: BountyStatus, reward: number, planet: string, id: string, description: string, createdBy: { __typename?: 'User', email: string, id: string } } };
 
-export type UpdateBountyMutationVariables = Exact<{
+export type EditBountyMutationVariables = Exact<{
   bountyId: Scalars['ID']['input'];
   data?: InputMaybe<UpdateBountyInput>;
 }>;
 
 
-export type UpdateBountyMutation = { __typename?: 'Mutation', updateBounty: { __typename?: 'Bounty', title: string, targetId: number, status: BountyStatus, reward: number, planet: string, id: string, description: string, createdBy: { __typename?: 'User', email: string, id: string } } };
+export type EditBountyMutation = { __typename?: 'Mutation', updateBounty: { __typename?: 'Bounty', title: string, targetId: number, status: BountyStatus, reward: number, planet: string, id: string, description: string, createdBy: { __typename?: 'User', email: string, id: string } } };
+
+export type DeleteBountyMutationVariables = Exact<{
+  bountyId: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteBountyMutation = { __typename?: 'Mutation', deleteBounty: { __typename?: 'Bounty', title: string } };
+
+export type PostBountyMutationVariables = Exact<{
+  bountyId: Scalars['ID']['input'];
+}>;
+
+
+export type PostBountyMutation = { __typename?: 'Mutation', postBounty: { __typename?: 'Bounty', title: string } };
+
+export type AcceptBountyMutationVariables = Exact<{
+  bountyId: Scalars['ID']['input'];
+}>;
+
+
+export type AcceptBountyMutation = { __typename?: 'Mutation', acceptBounty: { __typename?: 'Bounty', title: string } };
 
 export type GetAvailableBountiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAvailableBountiesQuery = { __typename?: 'Query', allAvailableBounties: Array<{ __typename?: 'Bounty', title: string, targetId: number, reward: number, planet: string, id: string, description: string, createdBy: { __typename?: 'User', email: string, id: string } }> };
+export type GetAvailableBountiesQuery = { __typename?: 'Query', allAvailableBounties: Array<{ __typename?: 'Bounty', id: string, targetId: number, title: string, reward: number, planet: string, description: string, status: BountyStatus, createdBy: { __typename?: 'User', id: string, email: string } }> };
 
 export type GetCurrentUserBountiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCurrentUserBountiesQuery = { __typename?: 'Query', allCurrentUserBounties: { __typename?: 'CurrentUserBounties', posted: Array<{ __typename?: 'Bounty', title: string, targetId: number, status: BountyStatus, reward: number, planet: string, id: string, description: string, createdBy: { __typename?: 'User', email: string } }>, created: Array<{ __typename?: 'Bounty', title: string, targetId: number, status: BountyStatus, reward: number, planet: string, id: string, description: string, createdBy: { __typename?: 'User', email: string } }>, accepted: Array<{ __typename?: 'Bounty', title: string, targetId: number, status: BountyStatus, reward: number, planet: string, id: string, description: string, acceptedBy?: { __typename?: 'User', email: string } | null }> } };
+export type GetCurrentUserBountiesQuery = { __typename?: 'Query', allCurrentUserBounties: { __typename?: 'CurrentUserBounties', posted: Array<{ __typename?: 'Bounty', id: string, targetId: number, title: string, reward: number, planet: string, description: string, status: BountyStatus, createdBy: { __typename?: 'User', id: string, email: string } }>, created: Array<{ __typename?: 'Bounty', id: string, targetId: number, title: string, reward: number, planet: string, description: string, status: BountyStatus, createdBy: { __typename?: 'User', id: string, email: string } }>, accepted: Array<{ __typename?: 'Bounty', id: string, targetId: number, title: string, reward: number, planet: string, description: string, status: BountyStatus, acceptedBy?: { __typename?: 'User', id: string, email: string } | null, createdBy: { __typename?: 'User', id: string, email: string } }> } };
 
 
 export const RegisterUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RegisterUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"registerUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<RegisterUserMutation, RegisterUserMutationVariables>;
-export const LoginUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"LoginUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"loginUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<LoginUserMutation, LoginUserMutationVariables>;
+export const LoginUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"LoginUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"loginUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<LoginUserMutation, LoginUserMutationVariables>;
 export const LogoutUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"LogoutUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"logout"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}}]}}]}}]} as unknown as DocumentNode<LogoutUserMutation, LogoutUserMutationVariables>;
 export const CreateBountyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateBounty"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateBountyInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createBounty"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"targetId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"reward"}},{"kind":"Field","name":{"kind":"Name","value":"planet"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"createdBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<CreateBountyMutation, CreateBountyMutationVariables>;
-export const UpdateBountyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateBounty"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"bountyId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateBountyInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateBounty"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"bountyId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"bountyId"}}},{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"targetId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"reward"}},{"kind":"Field","name":{"kind":"Name","value":"planet"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"createdBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateBountyMutation, UpdateBountyMutationVariables>;
-export const GetAvailableBountiesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAvailableBounties"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allAvailableBounties"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"targetId"}},{"kind":"Field","name":{"kind":"Name","value":"reward"}},{"kind":"Field","name":{"kind":"Name","value":"planet"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"createdBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<GetAvailableBountiesQuery, GetAvailableBountiesQueryVariables>;
-export const GetCurrentUserBountiesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCurrentUserBounties"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allCurrentUserBounties"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"posted"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"targetId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"reward"}},{"kind":"Field","name":{"kind":"Name","value":"planet"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"createdBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"created"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"targetId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"reward"}},{"kind":"Field","name":{"kind":"Name","value":"planet"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"createdBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"accepted"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"targetId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"reward"}},{"kind":"Field","name":{"kind":"Name","value":"planet"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"acceptedBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetCurrentUserBountiesQuery, GetCurrentUserBountiesQueryVariables>;
+export const EditBountyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"EditBounty"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"bountyId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateBountyInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateBounty"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"bountyId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"bountyId"}}},{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"targetId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"reward"}},{"kind":"Field","name":{"kind":"Name","value":"planet"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"createdBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<EditBountyMutation, EditBountyMutationVariables>;
+export const DeleteBountyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteBounty"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"bountyId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteBounty"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"bountyId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"bountyId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}}]} as unknown as DocumentNode<DeleteBountyMutation, DeleteBountyMutationVariables>;
+export const PostBountyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PostBounty"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"bountyId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"postBounty"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"bountyId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"bountyId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}}]} as unknown as DocumentNode<PostBountyMutation, PostBountyMutationVariables>;
+export const AcceptBountyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AcceptBounty"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"bountyId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"acceptBounty"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"bountyId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"bountyId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}}]} as unknown as DocumentNode<AcceptBountyMutation, AcceptBountyMutationVariables>;
+export const GetAvailableBountiesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAvailableBounties"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allAvailableBounties"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"targetId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"reward"}},{"kind":"Field","name":{"kind":"Name","value":"planet"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<GetAvailableBountiesQuery, GetAvailableBountiesQueryVariables>;
+export const GetCurrentUserBountiesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCurrentUserBounties"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allCurrentUserBounties"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"posted"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"targetId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"reward"}},{"kind":"Field","name":{"kind":"Name","value":"planet"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"created"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"targetId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"reward"}},{"kind":"Field","name":{"kind":"Name","value":"planet"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"accepted"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"targetId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"reward"}},{"kind":"Field","name":{"kind":"Name","value":"planet"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"acceptedBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetCurrentUserBountiesQuery, GetCurrentUserBountiesQueryVariables>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -334,7 +358,7 @@ export type LoginUserMutationVariables = Exact<{
 }>;
 
 
-export type LoginUserMutation = { __typename?: 'Mutation', loginUser: { __typename?: 'AuthPayload', user: { __typename?: 'User', email: string, id: string } } };
+export type LoginUserMutation = { __typename?: 'Mutation', loginUser: { __typename?: 'AuthPayload', user: { __typename?: 'User', id: string, email: string } } };
 
 export type LogoutUserMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -348,23 +372,44 @@ export type CreateBountyMutationVariables = Exact<{
 
 export type CreateBountyMutation = { __typename?: 'Mutation', createBounty: { __typename?: 'Bounty', title: string, targetId: number, status: BountyStatus, reward: number, planet: string, id: string, description: string, createdBy: { __typename?: 'User', email: string, id: string } } };
 
-export type UpdateBountyMutationVariables = Exact<{
+export type EditBountyMutationVariables = Exact<{
   bountyId: Scalars['ID']['input'];
   data?: InputMaybe<UpdateBountyInput>;
 }>;
 
 
-export type UpdateBountyMutation = { __typename?: 'Mutation', updateBounty: { __typename?: 'Bounty', title: string, targetId: number, status: BountyStatus, reward: number, planet: string, id: string, description: string, createdBy: { __typename?: 'User', email: string, id: string } } };
+export type EditBountyMutation = { __typename?: 'Mutation', updateBounty: { __typename?: 'Bounty', title: string, targetId: number, status: BountyStatus, reward: number, planet: string, id: string, description: string, createdBy: { __typename?: 'User', email: string, id: string } } };
+
+export type DeleteBountyMutationVariables = Exact<{
+  bountyId: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteBountyMutation = { __typename?: 'Mutation', deleteBounty: { __typename?: 'Bounty', title: string } };
+
+export type PostBountyMutationVariables = Exact<{
+  bountyId: Scalars['ID']['input'];
+}>;
+
+
+export type PostBountyMutation = { __typename?: 'Mutation', postBounty: { __typename?: 'Bounty', title: string } };
+
+export type AcceptBountyMutationVariables = Exact<{
+  bountyId: Scalars['ID']['input'];
+}>;
+
+
+export type AcceptBountyMutation = { __typename?: 'Mutation', acceptBounty: { __typename?: 'Bounty', title: string } };
 
 export type GetAvailableBountiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAvailableBountiesQuery = { __typename?: 'Query', allAvailableBounties: Array<{ __typename?: 'Bounty', title: string, targetId: number, reward: number, planet: string, id: string, description: string, createdBy: { __typename?: 'User', email: string, id: string } }> };
+export type GetAvailableBountiesQuery = { __typename?: 'Query', allAvailableBounties: Array<{ __typename?: 'Bounty', id: string, targetId: number, title: string, reward: number, planet: string, description: string, status: BountyStatus, createdBy: { __typename?: 'User', id: string, email: string } }> };
 
 export type GetCurrentUserBountiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCurrentUserBountiesQuery = { __typename?: 'Query', allCurrentUserBounties: { __typename?: 'CurrentUserBounties', posted: Array<{ __typename?: 'Bounty', title: string, targetId: number, status: BountyStatus, reward: number, planet: string, id: string, description: string, createdBy: { __typename?: 'User', email: string } }>, created: Array<{ __typename?: 'Bounty', title: string, targetId: number, status: BountyStatus, reward: number, planet: string, id: string, description: string, createdBy: { __typename?: 'User', email: string } }>, accepted: Array<{ __typename?: 'Bounty', title: string, targetId: number, status: BountyStatus, reward: number, planet: string, id: string, description: string, acceptedBy?: { __typename?: 'User', email: string } | null }> } };
+export type GetCurrentUserBountiesQuery = { __typename?: 'Query', allCurrentUserBounties: { __typename?: 'CurrentUserBounties', posted: Array<{ __typename?: 'Bounty', id: string, targetId: number, title: string, reward: number, planet: string, description: string, status: BountyStatus, createdBy: { __typename?: 'User', id: string, email: string } }>, created: Array<{ __typename?: 'Bounty', id: string, targetId: number, title: string, reward: number, planet: string, description: string, status: BountyStatus, createdBy: { __typename?: 'User', id: string, email: string } }>, accepted: Array<{ __typename?: 'Bounty', id: string, targetId: number, title: string, reward: number, planet: string, description: string, status: BountyStatus, acceptedBy?: { __typename?: 'User', id: string, email: string } | null, createdBy: { __typename?: 'User', id: string, email: string } }> } };
 
 
 export const RegisterUserDocument = gql`
@@ -408,8 +453,8 @@ export const LoginUserDocument = gql`
     mutation LoginUser($email: String!, $password: String!) {
   loginUser(email: $email, password: $password) {
     user {
-      email
       id
+      email
     }
   }
 }
@@ -516,8 +561,8 @@ export function useCreateBountyMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateBountyMutationHookResult = ReturnType<typeof useCreateBountyMutation>;
 export type CreateBountyMutationResult = Apollo.MutationResult<CreateBountyMutation>;
 export type CreateBountyMutationOptions = Apollo.BaseMutationOptions<CreateBountyMutation, CreateBountyMutationVariables>;
-export const UpdateBountyDocument = gql`
-    mutation UpdateBounty($bountyId: ID!, $data: UpdateBountyInput) {
+export const EditBountyDocument = gql`
+    mutation EditBounty($bountyId: ID!, $data: UpdateBountyInput) {
   updateBounty(bountyId: $bountyId, data: $data) {
     title
     targetId
@@ -533,45 +578,145 @@ export const UpdateBountyDocument = gql`
   }
 }
     `;
-export type UpdateBountyMutationFn = Apollo.MutationFunction<UpdateBountyMutation, UpdateBountyMutationVariables>;
+export type EditBountyMutationFn = Apollo.MutationFunction<EditBountyMutation, EditBountyMutationVariables>;
 
 /**
- * __useUpdateBountyMutation__
+ * __useEditBountyMutation__
  *
- * To run a mutation, you first call `useUpdateBountyMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateBountyMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useEditBountyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditBountyMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateBountyMutation, { data, loading, error }] = useUpdateBountyMutation({
+ * const [editBountyMutation, { data, loading, error }] = useEditBountyMutation({
  *   variables: {
  *      bountyId: // value for 'bountyId'
  *      data: // value for 'data'
  *   },
  * });
  */
-export function useUpdateBountyMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBountyMutation, UpdateBountyMutationVariables>) {
+export function useEditBountyMutation(baseOptions?: Apollo.MutationHookOptions<EditBountyMutation, EditBountyMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateBountyMutation, UpdateBountyMutationVariables>(UpdateBountyDocument, options);
+        return Apollo.useMutation<EditBountyMutation, EditBountyMutationVariables>(EditBountyDocument, options);
       }
-export type UpdateBountyMutationHookResult = ReturnType<typeof useUpdateBountyMutation>;
-export type UpdateBountyMutationResult = Apollo.MutationResult<UpdateBountyMutation>;
-export type UpdateBountyMutationOptions = Apollo.BaseMutationOptions<UpdateBountyMutation, UpdateBountyMutationVariables>;
+export type EditBountyMutationHookResult = ReturnType<typeof useEditBountyMutation>;
+export type EditBountyMutationResult = Apollo.MutationResult<EditBountyMutation>;
+export type EditBountyMutationOptions = Apollo.BaseMutationOptions<EditBountyMutation, EditBountyMutationVariables>;
+export const DeleteBountyDocument = gql`
+    mutation DeleteBounty($bountyId: ID!) {
+  deleteBounty(bountyId: $bountyId) {
+    title
+  }
+}
+    `;
+export type DeleteBountyMutationFn = Apollo.MutationFunction<DeleteBountyMutation, DeleteBountyMutationVariables>;
+
+/**
+ * __useDeleteBountyMutation__
+ *
+ * To run a mutation, you first call `useDeleteBountyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteBountyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteBountyMutation, { data, loading, error }] = useDeleteBountyMutation({
+ *   variables: {
+ *      bountyId: // value for 'bountyId'
+ *   },
+ * });
+ */
+export function useDeleteBountyMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBountyMutation, DeleteBountyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteBountyMutation, DeleteBountyMutationVariables>(DeleteBountyDocument, options);
+      }
+export type DeleteBountyMutationHookResult = ReturnType<typeof useDeleteBountyMutation>;
+export type DeleteBountyMutationResult = Apollo.MutationResult<DeleteBountyMutation>;
+export type DeleteBountyMutationOptions = Apollo.BaseMutationOptions<DeleteBountyMutation, DeleteBountyMutationVariables>;
+export const PostBountyDocument = gql`
+    mutation PostBounty($bountyId: ID!) {
+  postBounty(bountyId: $bountyId) {
+    title
+  }
+}
+    `;
+export type PostBountyMutationFn = Apollo.MutationFunction<PostBountyMutation, PostBountyMutationVariables>;
+
+/**
+ * __usePostBountyMutation__
+ *
+ * To run a mutation, you first call `usePostBountyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostBountyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postBountyMutation, { data, loading, error }] = usePostBountyMutation({
+ *   variables: {
+ *      bountyId: // value for 'bountyId'
+ *   },
+ * });
+ */
+export function usePostBountyMutation(baseOptions?: Apollo.MutationHookOptions<PostBountyMutation, PostBountyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PostBountyMutation, PostBountyMutationVariables>(PostBountyDocument, options);
+      }
+export type PostBountyMutationHookResult = ReturnType<typeof usePostBountyMutation>;
+export type PostBountyMutationResult = Apollo.MutationResult<PostBountyMutation>;
+export type PostBountyMutationOptions = Apollo.BaseMutationOptions<PostBountyMutation, PostBountyMutationVariables>;
+export const AcceptBountyDocument = gql`
+    mutation AcceptBounty($bountyId: ID!) {
+  acceptBounty(bountyId: $bountyId) {
+    title
+  }
+}
+    `;
+export type AcceptBountyMutationFn = Apollo.MutationFunction<AcceptBountyMutation, AcceptBountyMutationVariables>;
+
+/**
+ * __useAcceptBountyMutation__
+ *
+ * To run a mutation, you first call `useAcceptBountyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAcceptBountyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [acceptBountyMutation, { data, loading, error }] = useAcceptBountyMutation({
+ *   variables: {
+ *      bountyId: // value for 'bountyId'
+ *   },
+ * });
+ */
+export function useAcceptBountyMutation(baseOptions?: Apollo.MutationHookOptions<AcceptBountyMutation, AcceptBountyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AcceptBountyMutation, AcceptBountyMutationVariables>(AcceptBountyDocument, options);
+      }
+export type AcceptBountyMutationHookResult = ReturnType<typeof useAcceptBountyMutation>;
+export type AcceptBountyMutationResult = Apollo.MutationResult<AcceptBountyMutation>;
+export type AcceptBountyMutationOptions = Apollo.BaseMutationOptions<AcceptBountyMutation, AcceptBountyMutationVariables>;
 export const GetAvailableBountiesDocument = gql`
     query GetAvailableBounties {
   allAvailableBounties {
-    title
+    id
     targetId
+    title
     reward
     planet
-    id
     description
+    status
     createdBy {
-      email
       id
+      email
     }
   }
 }
@@ -612,38 +757,45 @@ export const GetCurrentUserBountiesDocument = gql`
     query GetCurrentUserBounties {
   allCurrentUserBounties {
     posted {
-      title
+      id
       targetId
-      status
+      title
       reward
       planet
-      id
       description
+      status
       createdBy {
+        id
         email
       }
     }
     created {
-      title
+      id
       targetId
-      status
+      title
       reward
       planet
-      id
       description
+      status
       createdBy {
+        id
         email
       }
     }
     accepted {
-      title
+      id
       targetId
-      status
+      title
       reward
       planet
-      id
       description
+      status
       acceptedBy {
+        id
+        email
+      }
+      createdBy {
+        id
         email
       }
     }

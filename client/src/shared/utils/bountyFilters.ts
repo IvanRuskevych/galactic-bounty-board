@@ -19,6 +19,6 @@ export function filterBounties(
   return bountiesToShow.filter(bounty =>
     bounty.title.toLowerCase().includes(query) ||
     bounty.planet.toLowerCase().includes(query) ||
-    (bounty.description?.toLowerCase().includes(query) ?? false),
+    bounty.description?.toLowerCase().includes(query),
   );
 }

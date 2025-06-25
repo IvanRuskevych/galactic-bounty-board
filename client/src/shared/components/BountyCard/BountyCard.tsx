@@ -1,16 +1,9 @@
-import { Box, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
-import type { Bounty } from "../../../generated/graphql";
+import { Card, CardActionArea, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
 import { useAuthStore, useStarWarsStore } from "../../../store";
+import type { BountyCardProps } from "../../../typings";
 import { BountyStatus } from "../../constants";
 import { BountyCardActionButton } from "../../ui";
 
-interface BountyCardProps {
-  bounty: Bounty;
-  onEdit?: () => void;
-  onPost?: () => void;
-  onAccept?: () => void;
-  onDelete?: () => void;
-}
 
 export const BountyCard = ({
   bounty,
@@ -18,49 +11,76 @@ export const BountyCard = ({
   onPost,
   onAccept,
   onDelete,
+  context = "private",
 }: BountyCardProps) => {
-  const {isAuth} = useAuthStore();
+  const {isAuth, user} = useAuthStore();
+  const isOwner = user?.id === bounty.createdBy?.id;
+  
   const {getCharacterById} = useStarWarsStore()
   const target = getCharacterById(bounty.targetId)
   
   const renderActions = () => {
     if (!isAuth) return null;
     
-    switch (bounty.status) {
-      case BountyStatus.CREATED:
-        return (
-          <>
-            {onEdit && <BountyCardActionButton label={"Post"} color={"warning"}/>}
-            {onPost && <BountyCardActionButton label={"Edit"} color={"primary"}/>}
-          </>
-        );
-      case BountyStatus.POSTED:
-        return (
-          <>
-            {onEdit && <BountyCardActionButton label={"Edit"} color="warning"/>}
-            {onAccept && <BountyCardActionButton label={"Accept"} color="success"/>}
-          </>
-        );
-      case BountyStatus.ACCEPTED:
-        return (
-          <>
-            <Box
-              sx={{
-                fontSize: "0.875rem",
-                color: "white",
-                bg: "success.main",
-                px: 2,
-                py: 0.5,
-                borderRadius: 1,
-              }}
-            >
-              Accepted by: {bounty.acceptedBy?.email || "Unknown"}
-            </Box>
-          </>
-        );
-      default:
-        return null;
+    if (context === "public" && bounty.status === BountyStatus.POSTED && isOwner) {
+      return (
+        <BountyCardActionButton label="Posted by me" disabled/>
+      );
     }
+    
+    if (isOwner) {
+      // for bounty owner
+      switch (bounty.status) {
+        case BountyStatus.CREATED:
+          return (
+            <>
+              {onEdit && <BountyCardActionButton label={"Edit"} color={"success"} onClick={() => onEdit(bounty)}/>}
+              {onPost && <BountyCardActionButton label={"Post"} color={"primary"} onClick={() => onPost(bounty.id)}/>}
+              {onDelete && <BountyCardActionButton label="Delete" color={"error"} onClick={() => onDelete(bounty.id)}/>}
+            </>
+          );
+        
+        case BountyStatus.POSTED:
+          return (
+            <>
+              {onEdit && <BountyCardActionButton label={"Edit"} color={"success"} onClick={() => onEdit(bounty)}/>}
+              {onDelete && <BountyCardActionButton label="Delete" color={"error"} onClick={() => onDelete(bounty.id)}/>}
+            </>
+          );
+        
+        case BountyStatus.ACCEPTED:
+          return (
+            <>
+              <BountyCardActionButton label={"Accepted by me"} disabled={true}/>
+            </>
+          );
+      }
+    } else {
+      // for not bounty owner
+      if (bounty.status === BountyStatus.POSTED) {
+        return (
+          <>
+            {onAccept && (
+              <>
+                <BountyCardActionButton
+                  label="Accept"
+                  color="success"
+                  onClick={() => onAccept(bounty.id)}
+                />
+              </>
+            )}
+          </>
+        )
+      }
+      if (bounty.status === BountyStatus.ACCEPTED) {
+        return (
+          <>
+            <BountyCardActionButton label={"Accepted by me"} disabled={true}/>
+          </>
+        )
+      }
+    }
+    return null;
   }
   
   return (
@@ -71,22 +91,10 @@ export const BountyCard = ({
           height="160"
           image={target?.image}
           alt={bounty.planet}
-          sx={{objectFit: "contain"}}
+          sx={{objectFit: "contain", pt: 2}}
         />
-        <CardContent sx={{height: "100%", minHeight: 250}}
-        >
-          <Typography
-            gutterBottom
-            variant="h5"
-            component="div"
-            sx={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-            }}
-          >
+        <CardContent sx={{height: "100%", minHeight: 250}}>
+          <Typography gutterBottom variant="h5" sx={{fontWeight: "bold"}}>
             {bounty.title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
@@ -123,9 +131,6 @@ export const BountyCard = ({
       
       <CardActions sx={{mt: "auto", justifyContent: "space-between"}}>
         {renderActions()}
-        {onDelete && isAuth && bounty.status !== "ACCEPTED" && (
-          <BountyCardActionButton label={"Delete"} onClick={onDelete}/>
-        )}
       </CardActions>
     </Card>
   );

@@ -1,17 +1,22 @@
 import { gql } from "@apollo/client";
 
 export const GET_AVAILABLE_BOUNTIES = gql`
-    query GetAvailableBounties {
+    query AllAvailableBounties {
         allAvailableBounties {
             title
             targetId
+            status
             reward
             planet
             id
             description
             createdBy {
-                email
                 id
+                email
+            }
+            acceptedBy {
+                id
+                email
             }
         }
     }
@@ -21,38 +26,45 @@ export const GET_CURRENT_USER_BOUNTIES = gql`
     query GetCurrentUserBounties {
         allCurrentUserBounties {
             posted {
-                title
+                id
                 targetId
-                status
+                title
                 reward
                 planet
-                id
                 description
+                status
                 createdBy {
+                    id
                     email
                 }
             }
             created {
-                title
+                id
                 targetId
-                status
+                title
                 reward
                 planet
-                id
                 description
+                status
                 createdBy {
+                    id
                     email
                 }
             }
             accepted {
-                title
+                id
                 targetId
-                status
+                title
                 reward
                 planet
-                id
                 description
+                status
                 acceptedBy {
+                    id
+                    email
+                }
+                createdBy {
+                    id
                     email
                 }
             }

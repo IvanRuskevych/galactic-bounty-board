@@ -4,19 +4,17 @@ interface BountyCardActionButtonProps {
   onClick?: () => void;
   label: string;
   color?: "primary" | "success" | "warning" | "error";
-  show?: boolean;
+  disabled?: boolean;
 }
 
 export const BountyCardActionButton = ({
   onClick,
   label,
   color = "primary",
-  show = true,
+  disabled = false,
 }: BountyCardActionButtonProps) => {
-  if (show) return null;
-  
   return (
-    <Button size="small" color={color} onClick={onClick}>
+    <Button size="small" color={color} onClick={onClick} disabled={disabled} sx={{fontWeight: "bold"}}>
       {label}
     </Button>
   );

@@ -2,7 +2,7 @@ import { useMutation } from "@apollo/client";
 import { Box, MenuItem, TextField } from "@mui/material";
 import { type FormEvent, useEffect, useState } from "react";
 import type { Bounty } from "../../../generated/graphql";
-import { CREATE_BOUNTY, UPDATE_BOUNTY } from "../../../graphql/mutations";
+import { CREATE_BOUNTY, EDIT_BOUNTY } from "../../../graphql/mutations";
 import { useBountyStore, useStarWarsStore } from "../../../store";
 
 export interface BountyFormValues {
@@ -14,30 +14,23 @@ export interface BountyFormValues {
 }
 
 export const BountyForm = ({
-  initialValues,
-  onSubmitSuccess,
-}: {
-  initialValues?: Bounty | null;
-  onSubmitSuccess?: () => void;
-}) => {
+  initialValues, onSubmitSuccess,
+}: { initialValues?: Bounty | null; onSubmitSuccess?: () => void }) => {
   const isEdit = Boolean(initialValues);
   
+  const [targetId, setTargetId] = useState(0);
   const [title, setTitle] = useState(initialValues?.title || "");
-  const [description, setDescription] = useState(initialValues?.description || "");
   const [planet, setPlanet] = useState(initialValues?.planet || "");
   const [reward, setReward] = useState(initialValues?.reward || 0);
-  const [targetId, setTargetId] = useState(0);
-  console.log({targetId})
+  const [description, setDescription] = useState(initialValues?.description || "");
+  
   const {characters} = useStarWarsStore();
   const {fetchCurrentUserBounties} = useBountyStore()
-  
   const [createBounty] = useMutation(CREATE_BOUNTY);
-  const [updateBounty] = useMutation(UPDATE_BOUNTY);
-  
+  const [updateBounty] = useMutation(EDIT_BOUNTY);
   
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
     const data = {
       title,
       description,
@@ -63,7 +56,6 @@ export const BountyForm = ({
   
   useEffect(() => {
     const selectedCharacter = characters.find(item => item.id === targetId);
-    console.log({selectedCharacter});
     if (selectedCharacter) setPlanet(selectedCharacter.homeworld)
   })
   

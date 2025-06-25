@@ -18,8 +18,8 @@ export const CREATE_BOUNTY = gql`
     }
 `;
 
-export const UPDATE_BOUNTY = gql`
-    mutation UpdateBounty($bountyId: ID!, $data: UpdateBountyInput) {
+export const EDIT_BOUNTY = gql`
+    mutation EditBounty($bountyId: ID!, $data: UpdateBountyInput) {
         updateBounty(bountyId: $bountyId, data: $data) {
             title
             targetId
@@ -32,6 +32,30 @@ export const UPDATE_BOUNTY = gql`
                 email
                 id
             }
+        }
+    }
+`;
+
+export const DELETE_BOUNTY = gql`
+    mutation DeleteBounty($bountyId: ID!) {
+        deleteBounty(bountyId: $bountyId) {
+            title
+        }
+    }
+`
+
+export const POST_BOUNTY = gql`
+    mutation PostBounty($bountyId: ID!) {
+        postBounty(bountyId: $bountyId) {
+            title
+        }
+    }
+`;
+
+export const ACCEPT_BOUNTY = gql`
+    mutation AcceptBounty($bountyId: ID!) {
+        acceptBounty(bountyId: $bountyId) {
+            title
         }
     }
 `;

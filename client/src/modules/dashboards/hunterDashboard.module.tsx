@@ -1,5 +1,8 @@
+import { useMutation } from "@apollo/client";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
+import type { Bounty } from "../../generated/graphql.ts";
+import { ACCEPT_BOUNTY, DELETE_BOUNTY, POST_BOUNTY } from "../../graphql/mutations";
 import { BountyDialog, BountyList } from "../../shared/components";
 import { filterBounties } from "../../shared/utils";
 import { useBountyStore, useStarWarsStore } from "../../store";
@@ -8,13 +11,11 @@ const FILTERS = ["ALL", "CREATED", "POSTED", "ACCEPTED"] as const;
 type FilterType = typeof FILTERS[number];
 
 export const HunterDashboard = () => {
-  const {
-    created = [],
-    posted = [],
-    accepted = [],
-    fetchCurrentUserBounties,
-  } = useBountyStore();
+  const {created = [], posted = [], accepted = [], fetchCurrentUserBounties} = useBountyStore();
   const {fetchCharacters} = useStarWarsStore();
+  const [deleteBounty] = useMutation(DELETE_BOUNTY)
+  const [postBounty] = useMutation(POST_BOUNTY)
+  const [acceptBounty] = useMutation(ACCEPT_BOUNTY)
   
   
   const [filter, setFilter] = useState<FilterType>("ALL");
@@ -26,6 +27,26 @@ export const HunterDashboard = () => {
     return filterBounties(allBounties, filter, search);
   }, [allBounties, filter, search]);
   
+  
+  const handleEdit = (bounty: Bounty) => {
+    // TODO: will be created
+    console.log(bounty);
+  };
+  
+  const handlePost = async (bountyId: string) => {
+    await postBounty({variables: {bountyId}});
+    fetchCurrentUserBounties()
+  }
+  const handleDelete = async (bountyId: string) => {
+    await deleteBounty({variables: {bountyId}});
+    fetchCurrentUserBounties()
+  }
+  const handleAccept = async (bountyId: string) => {
+    await acceptBounty({variables: {bountyId}});
+    fetchCurrentUserBounties()
+  }
+  
+  
   useEffect(() => {
     fetchCurrentUserBounties();
     fetchCharacters()
@@ -34,7 +55,7 @@ export const HunterDashboard = () => {
   return (
     <>
       <Container>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box display="flex" justifyContent="space-between" alignItems="center" sx={{p: 1}}>
           <Typography variant="h4">My Bounties</Typography>
           <Button variant="contained" onClick={() => setDialogOpen(true)}>
             Create Bounty
@@ -71,7 +92,13 @@ export const HunterDashboard = () => {
           </Box>
         </Box>
         
-        <BountyList bounties={filteredBounties}/>
+        <BountyList
+          bounties={filteredBounties}
+          onEdit={handleEdit}
+          onPost={handlePost}
+          onAccept={handleAccept}
+          onDelete={handleDelete}
+        />
         {filteredBounties.length === 0 && <Typography>No bounties found.</Typography>}
       </Container>
       <BountyDialog open={dialogOpen} onClose={() => setDialogOpen(false)}/>

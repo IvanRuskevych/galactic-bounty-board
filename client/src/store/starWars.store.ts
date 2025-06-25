@@ -14,6 +14,7 @@ export interface StarWarsStore {
   error: string | null;
   fetchCharacters: () => void;
   getCharacterById: (id: number) => Character | undefined;
+  reset: () => void;
 }
 
 export const useStarWarsStore = create<StarWarsStore>()(
@@ -41,6 +42,16 @@ export const useStarWarsStore = create<StarWarsStore>()(
         
         getCharacterById: (id) => {
           return get().characters.find(item => item.id === id)
+        },
+        
+        reset: () => {
+          set(
+            {
+              characters: [],
+              loading: false,
+              error: null,
+            },
+          )
         },
       }
     ),
