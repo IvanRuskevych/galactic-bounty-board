@@ -1,18 +1,14 @@
-import { useMutation } from "@apollo/client";
 import { CircularProgress, Container, Typography } from "@mui/material";
 import { useEffect } from "react";
-import { ACCEPT_BOUNTY } from "../../graphql/mutations";
 import { BountyList } from "../../shared/components";
 import { useBountyStore, useStarWarsStore } from "../../store";
 
 export const PublicDashboard = () => {
-  const {bounties, loading, error, fetchPublicBounties} = useBountyStore();
+  const {bounties, loading, error, fetchPublicBounties, acceptBounty} = useBountyStore();
   const {fetchCharacters} = useStarWarsStore();
   
-  const [acceptBounty] = useMutation(ACCEPT_BOUNTY)
   const handleAccept = async (bountyId: string) => {
-    await acceptBounty({variables: {bountyId}});
-    fetchPublicBounties()
+    acceptBounty(bountyId);
   }
   
   useEffect(() => {

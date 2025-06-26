@@ -25,6 +25,7 @@ export const useAuthStore = create<AuthStore>()(
         } catch (err) {
           const {fieldErrors, error} = handleApolloError(err);
           set({fieldErrors, error});
+          throw err;
         } finally {
           set({loading: false});
         }
@@ -40,6 +41,7 @@ export const useAuthStore = create<AuthStore>()(
         } catch (err) {
           const {fieldErrors, error} = handleApolloError(err);
           set({fieldErrors, error});
+          throw err;
         } finally {
           set({loading: false});
         }
@@ -58,6 +60,7 @@ export const useAuthStore = create<AuthStore>()(
         } catch (err) {
           const {fieldErrors, error} = handleApolloError(err);
           set({fieldErrors, error});
+          throw err;
         } finally {
           set({loading: false});
         }

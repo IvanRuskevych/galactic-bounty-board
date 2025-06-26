@@ -1,4 +1,5 @@
 import type { Bounty } from "../generated/graphql.ts";
+import type { BountyFormValues } from "../shared/components";
 
 export interface BountyStore {
   bounties: Bounty[];
@@ -13,6 +14,13 @@ export interface BountyStore {
   fetchPublicBounties: () => void;
   fetchCurrentUserBounties: () => void;
   reset: () => void;
+  resetErrors: () => void;
+  createBounty: (data: BountyFormValues) => void;
+  updateBounty: (bountyId: string, data: BountyFormValues) => void;
+  deleteBounty: (bountyId: string) => void;
+  postBounty: (bountyId: string) => void;
+  acceptBounty: (bountyId: string) => void;
+  
 }
 
 export interface BountyListProps {

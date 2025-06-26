@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { BountyService } from "../services";
+import type { BountyFormValues } from "../shared/components";
 import { handleApolloError } from "../shared/utils";
 import type { BountyStore } from "../typings";
 
 export const useBountyStore = create<BountyStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
         bounties: [],
         created: [],
         posted: [],
@@ -23,6 +24,7 @@ export const useBountyStore = create<BountyStore>()(
           } catch (err) {
             const {fieldErrors, error} = handleApolloError(err);
             set({fieldErrors, error});
+            throw err;
           } finally {
             set({loading: false});
           }
@@ -40,9 +42,86 @@ export const useBountyStore = create<BountyStore>()(
           } catch (err) {
             const {fieldErrors, error} = handleApolloError(err);
             set({fieldErrors, error});
+            throw err;
           } finally {
             set({loading: false});
           }
+        },
+        
+        createBounty: async (data: BountyFormValues) => {
+          set({loading: true, error: null});
+          
+          try {
+            await BountyService.create(data)
+            get().fetchCurrentUserBounties()
+          } catch (err) {
+            const {fieldErrors, error} = handleApolloError(err);
+            set({fieldErrors, error});
+            throw err
+          } finally {
+            set({loading: false});
+          }
+        },
+        
+        updateBounty: async (bountyId: string, data: BountyFormValues) => {
+          set({loading: true, error: null});
+          try {
+            await BountyService.update(bountyId, data)
+            get().fetchCurrentUserBounties()
+          } catch (err) {
+            const {fieldErrors, error} = handleApolloError(err);
+            set({fieldErrors, error});
+            throw err
+          } finally {
+            set({loading: false});
+          }
+        },
+        
+        deleteBounty: async (bountyId: string) => {
+          set({loading: true, error: null});
+          try {
+            await BountyService.delete(bountyId)
+            get().fetchCurrentUserBounties()
+          } catch (err) {
+            const {fieldErrors, error} = handleApolloError(err);
+            set({fieldErrors, error});
+            throw err
+          } finally {
+            set({loading: false});
+          }
+        },
+        
+        
+        postBounty: async (bountyId: string) => {
+          set({loading: true, error: null});
+          try {
+            await BountyService.post(bountyId)
+            get().fetchCurrentUserBounties()
+          } catch (err) {
+            const {fieldErrors, error} = handleApolloError(err);
+            set({fieldErrors, error});
+            throw err
+          } finally {
+            set({loading: false});
+          }
+        },
+        
+        acceptBounty: async (bountyId: string) => {
+          set({loading: true, error: null});
+          try {
+            await BountyService.accept(bountyId)
+            get().fetchCurrentUserBounties()
+          } catch (err) {
+            const {fieldErrors, error} = handleApolloError(err);
+            set({fieldErrors, error});
+            throw err
+          } finally {
+            set({loading: false});
+          }
+        },
+        
+        resetErrors: () => {
+          set({fieldErrors: null, error: null});
         },
         
         reset: () =>

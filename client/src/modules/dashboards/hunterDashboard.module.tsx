@@ -1,8 +1,6 @@
-import { useMutation } from "@apollo/client";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import type { Bounty } from "../../generated/graphql.ts";
-import { ACCEPT_BOUNTY, DELETE_BOUNTY, POST_BOUNTY } from "../../graphql/mutations";
 import { BountyDialog, BountyList } from "../../shared/components";
 import { filterBounties } from "../../shared/utils";
 import { useBountyStore, useStarWarsStore } from "../../store";
@@ -11,18 +9,25 @@ const FILTERS = ["ALL", "CREATED", "POSTED", "ACCEPTED"] as const;
 type FilterType = typeof FILTERS[number];
 
 export const HunterDashboard = () => {
-  const {created = [], posted = [], accepted = [], fetchCurrentUserBounties} = useBountyStore();
+  const {
+    created = [],
+    posted = [],
+    accepted = [],
+    fetchCurrentUserBounties,
+    resetErrors,
+    deleteBounty,
+    postBounty,
+    acceptBounty,
+  } = useBountyStore();
   const {fetchCharacters} = useStarWarsStore();
-  const [deleteBounty] = useMutation(DELETE_BOUNTY)
-  const [postBounty] = useMutation(POST_BOUNTY)
-  const [acceptBounty] = useMutation(ACCEPT_BOUNTY)
-  const [filter, setFilter] = useState<FilterType>("ALL");
   
+  const [filter, setFilter] = useState<FilterType>("ALL");
   const [editingBounty, setEditingBounty] = useState<Bounty | null>(null)
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   
   const allBounties = [...created, ...posted, ...accepted];
+  
   const filteredBounties = useMemo(() => {
     return filterBounties(allBounties, filter, search);
   }, [allBounties, filter, search]);
@@ -33,19 +38,15 @@ export const HunterDashboard = () => {
     setDialogOpen(true);
   };
   
-  const handlePost = async (bountyId: string) => {
-    await postBounty({variables: {bountyId}});
-    fetchCurrentUserBounties()
+  const handlePost = (bountyId: string) => {
+    postBounty(bountyId);
   }
-  const handleDelete = async (bountyId: string) => {
-    await deleteBounty({variables: {bountyId}});
-    fetchCurrentUserBounties()
+  const handleDelete = (bountyId: string) => {
+    deleteBounty(bountyId);
   }
-  const handleAccept = async (bountyId: string) => {
-    await acceptBounty({variables: {bountyId}});
-    fetchCurrentUserBounties()
+  const handleAccept = (bountyId: string) => {
+    acceptBounty(bountyId);
   }
-  
   
   useEffect(() => {
     fetchCurrentUserBounties();
@@ -106,6 +107,7 @@ export const HunterDashboard = () => {
         onClose={() => {
           setDialogOpen(false)
           setEditingBounty(null)
+          resetErrors()
         }}
         onSuccess={() => {
           fetchCurrentUserBounties()

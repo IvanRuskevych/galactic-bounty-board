@@ -18,8 +18,8 @@ export const CREATE_BOUNTY = gql`
     }
 `;
 
-export const EDIT_BOUNTY = gql`
-    mutation EditBounty($bountyId: ID!, $data: UpdateBountyInput) {
+export const UPDATE_BOUNTY = gql`
+    mutation UpdateBounty($bountyId: ID!, $data: UpdateBountyInput) {
         updateBounty(bountyId: $bountyId, data: $data) {
             title
             targetId
