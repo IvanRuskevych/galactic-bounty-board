@@ -7,9 +7,15 @@ export const typeDefs = gql`
         ACCEPTED
     }
 
+    enum UserRole {
+        ADMIN
+        HUNTER
+    }
+
     type User {
         id: ID!
         email: String!
+        role: UserRole!
         bountiesCreated: [Bounty!]!
         bountiesAccepted: [Bounty!]!
     }
@@ -59,6 +65,7 @@ export const typeDefs = gql`
 
     type Query {
         currentUser: User
+        allUsers: [User!]!
         allAvailableBounties: [Bounty!]!
         allCurrentUserBounties: CurrentUserBounties!
     }

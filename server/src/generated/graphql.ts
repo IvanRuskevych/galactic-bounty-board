@@ -1,8 +1,7 @@
-// @ts-ignore
-import { Bounty, User } from '@prisma/client';
 import { GraphQLResolveInfo } from 'graphql';
+import { User, Bounty } from '@prisma/client';
 import { Context } from '../context';
-
+import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -115,6 +114,7 @@ export type Query = {
   __typename?: 'Query';
   allAvailableBounties: Array<Bounty>;
   allCurrentUserBounties: CurrentUserBounties;
+  allUsers: Array<User>;
   currentUser: Maybe<User>;
 };
 
@@ -138,7 +138,13 @@ export type User = {
   bountiesCreated: Array<Bounty>;
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  role: UserRole;
 };
+
+export enum UserRole {
+  Admin = 'ADMIN',
+  Hunter = 'HUNTER'
+}
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
@@ -149,29 +155,27 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-  ResolverFn<TResult, TParent, TContext, TArgs>
-  | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => Promise<TResult> | TResult;
 
 export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
 export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
@@ -195,7 +199,7 @@ export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TCo
 export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   parent: TParent,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
 export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
@@ -207,8 +211,9 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
+
 
 
 /** Mapping between all available schema types and the resolvers types */
@@ -218,11 +223,7 @@ export type ResolversTypes = ResolversObject<{
   Bounty: ResolverTypeWrapper<Bounty>;
   BountyStatus: BountyStatus;
   CreateBountyInput: CreateBountyInput;
-  CurrentUserBounties: ResolverTypeWrapper<Omit<CurrentUserBounties, 'accepted' | 'created' | 'posted'> & {
-    accepted: Array<ResolversTypes['Bounty']>,
-    created: Array<ResolversTypes['Bounty']>,
-    posted: Array<ResolversTypes['Bounty']>
-  }>;
+  CurrentUserBounties: ResolverTypeWrapper<Omit<CurrentUserBounties, 'accepted' | 'created' | 'posted'> & { accepted: Array<ResolversTypes['Bounty']>, created: Array<ResolversTypes['Bounty']>, posted: Array<ResolversTypes['Bounty']> }>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -231,6 +232,7 @@ export type ResolversTypes = ResolversObject<{
   SuccessResponse: ResolverTypeWrapper<SuccessResponse>;
   UpdateBountyInput: UpdateBountyInput;
   User: ResolverTypeWrapper<User>;
+  UserRole: UserRole;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -239,11 +241,7 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
   Bounty: Bounty;
   CreateBountyInput: CreateBountyInput;
-  CurrentUserBounties: Omit<CurrentUserBounties, 'accepted' | 'created' | 'posted'> & {
-    accepted: Array<ResolversParentTypes['Bounty']>,
-    created: Array<ResolversParentTypes['Bounty']>,
-    posted: Array<ResolversParentTypes['Bounty']>
-  };
+  CurrentUserBounties: Omit<CurrentUserBounties, 'accepted' | 'created' | 'posted'> & { accepted: Array<ResolversParentTypes['Bounty']>, created: Array<ResolversParentTypes['Bounty']>, posted: Array<ResolversParentTypes['Bounty']> };
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Mutation: {};
@@ -294,6 +292,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   allAvailableBounties?: Resolver<Array<ResolversTypes['Bounty']>, ParentType, ContextType>;
   allCurrentUserBounties?: Resolver<ResolversTypes['CurrentUserBounties'], ParentType, ContextType>;
+  allUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
 }>;
 
@@ -307,6 +306,7 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
   bountiesCreated?: Resolver<Array<ResolversTypes['Bounty']>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  role?: Resolver<ResolversTypes['UserRole'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
