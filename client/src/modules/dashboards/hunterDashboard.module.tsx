@@ -16,9 +16,9 @@ export const HunterDashboard = () => {
   const [deleteBounty] = useMutation(DELETE_BOUNTY)
   const [postBounty] = useMutation(POST_BOUNTY)
   const [acceptBounty] = useMutation(ACCEPT_BOUNTY)
-  
-  
   const [filter, setFilter] = useState<FilterType>("ALL");
+  
+  const [editingBounty, setEditingBounty] = useState<Bounty | null>(null)
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   
@@ -29,8 +29,8 @@ export const HunterDashboard = () => {
   
   
   const handleEdit = (bounty: Bounty) => {
-    // TODO: will be created
-    console.log(bounty);
+    setEditingBounty(bounty);
+    setDialogOpen(true);
   };
   
   const handlePost = async (bountyId: string) => {
@@ -55,7 +55,7 @@ export const HunterDashboard = () => {
   return (
     <>
       <Container>
-        <Box display="flex" justifyContent="space-between" alignItems="center" sx={{p: 1}}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" sx={{py: 1}}>
           <Typography variant="h4">My Bounties</Typography>
           <Button variant="contained" onClick={() => setDialogOpen(true)}>
             Create Bounty
@@ -101,7 +101,19 @@ export const HunterDashboard = () => {
         />
         {filteredBounties.length === 0 && <Typography>No bounties found.</Typography>}
       </Container>
-      <BountyDialog open={dialogOpen} onClose={() => setDialogOpen(false)}/>
+      <BountyDialog
+        open={dialogOpen}
+        onClose={() => {
+          setDialogOpen(false)
+          setEditingBounty(null)
+        }}
+        onSuccess={() => {
+          fetchCurrentUserBounties()
+          setDialogOpen(false)
+          setEditingBounty(null)
+        }}
+        initialData={editingBounty}
+      />
     </>
   );
 };

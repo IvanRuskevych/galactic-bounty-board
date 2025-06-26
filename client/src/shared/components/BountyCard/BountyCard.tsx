@@ -94,7 +94,14 @@ export const BountyCard = ({
           sx={{objectFit: "contain", pt: 2}}
         />
         <CardContent sx={{height: "100%", minHeight: 250}}>
-          <Typography gutterBottom variant="h5" sx={{fontWeight: "bold"}}>
+          <Typography gutterBottom variant="h5" sx={{
+            fontWeight: "bold",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 1,
+            WebkitBoxOrient: "vertical",
+          }}>
             {bounty.title}
           </Typography>
           <Typography variant="body2" color="text.secondary">

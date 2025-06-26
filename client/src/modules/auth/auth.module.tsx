@@ -1,7 +1,9 @@
-import {AuthForm} from "./AuthForm.tsx";
+import type { FC } from "react";
+import { AuthForm } from "../../shared/components";
+import type { AuthFormProps } from "../../shared/components/AuthForm/types.ts";
 
-export const Auth = ({mode}) => {
-    return (
-        <AuthForm mode={mode} />
-    );
+export const Auth: FC<AuthFormProps> = ({mode}) => {
+  return (
+    <AuthForm mode={mode}/>
+  );
 };
