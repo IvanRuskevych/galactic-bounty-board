@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, UserRole } from "@prisma/client";
 
 export const userRepository = {
   create: (prisma: PrismaClient, email: string, password: string) =>
@@ -15,8 +15,8 @@ export const userRepository = {
     });
   },
   
-  getAll: (prisma: PrismaClient) => {
-    return prisma.user.findMany({});
+  getAllHunters: (prisma: PrismaClient) => {
+    return prisma.user.findMany({where: {role: UserRole.HUNTER}});
   },
   
   // update: (prisma: PrismaClient, id: string, data: Prisma.UserUpdateInput) =>
