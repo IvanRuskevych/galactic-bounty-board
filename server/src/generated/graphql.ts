@@ -114,7 +114,7 @@ export type Query = {
   __typename?: 'Query';
   allAvailableBounties: Array<Bounty>;
   allCurrentUserBounties: CurrentUserBounties;
-  allUsers: Array<User>;
+  allHunters: Array<User>;
   currentUser: Maybe<User>;
 };
 
@@ -292,7 +292,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   allAvailableBounties?: Resolver<Array<ResolversTypes['Bounty']>, ParentType, ContextType>;
   allCurrentUserBounties?: Resolver<ResolversTypes['CurrentUserBounties'], ParentType, ContextType>;
-  allUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  allHunters?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
 }>;
 

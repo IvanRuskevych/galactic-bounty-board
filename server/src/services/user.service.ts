@@ -11,9 +11,9 @@ export const userService = {
     return userRepository.create(ctx.prisma, email, password);
   },
   
-  getAllUsers: (ctx: Context) => {
+  getAllHunters: (ctx: Context) => {
     requireAuth(ctx)
     requireRoleAdmin(ctx)
-    return userRepository.getAll(ctx.prisma)
+    return userRepository.getAllHunters(ctx.prisma)
   },
 };

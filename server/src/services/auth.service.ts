@@ -14,7 +14,7 @@ import {
   validateInput,
   verifyRefreshToken,
 } from "../utils";
-import { LoginSchema, RegisterSchema } from "../validations";
+import { AuthSchema } from "../validations";
 import { userService } from "./user.service";
 
 export interface AuthArgsType {
@@ -24,7 +24,7 @@ export interface AuthArgsType {
 
 export const authService = {
   register: async (args: AuthArgsType, ctx: Context) => {
-    const {email, password} = validateInput(RegisterSchema, args);
+    const {email, password} = validateInput(AuthSchema, args);
     const normalizedEmail = normalizeEmail(email);
     
     await ensureUserDoesNotExist(normalizedEmail, ctx);
@@ -38,7 +38,7 @@ export const authService = {
   },
   
   login: async (args: AuthArgsType, ctx: Context) => {
-    const {email, password} = validateInput(LoginSchema, args);
+    const {email, password} = validateInput(AuthSchema, args);
     const normalizedEmail = normalizeEmail(email);
     
     const user = await ensureUserExists(normalizedEmail, ctx);
