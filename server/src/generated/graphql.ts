@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { User, Bounty } from '@prisma/client';
+import { User as PrismaUser, Bounty as PrismaBounty } from '@prisma/client';
 import { Context } from '../context';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
@@ -9,7 +9,6 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -218,38 +217,38 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  AuthPayload: ResolverTypeWrapper<Omit<AuthPayload, 'user'> & { user: ResolversTypes['User'] }>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  Bounty: ResolverTypeWrapper<Bounty>;
-  BountyStatus: BountyStatus;
-  CreateBountyInput: CreateBountyInput;
-  CurrentUserBounties: ResolverTypeWrapper<Omit<CurrentUserBounties, 'accepted' | 'created' | 'posted'> & { accepted: Array<ResolversTypes['Bounty']>, created: Array<ResolversTypes['Bounty']>, posted: Array<ResolversTypes['Bounty']> }>;
-  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
-  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  AuthPayload: ResolverTypeWrapper<any>;
+  Boolean: ResolverTypeWrapper<any>;
+  Bounty: ResolverTypeWrapper<PrismaBounty>;
+  BountyStatus: ResolverTypeWrapper<any>;
+  CreateBountyInput: ResolverTypeWrapper<any>;
+  CurrentUserBounties: ResolverTypeWrapper<any>;
+  ID: ResolverTypeWrapper<any>;
+  Int: ResolverTypeWrapper<any>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
-  String: ResolverTypeWrapper<Scalars['String']['output']>;
-  SuccessResponse: ResolverTypeWrapper<SuccessResponse>;
-  UpdateBountyInput: UpdateBountyInput;
-  User: ResolverTypeWrapper<User>;
-  UserRole: UserRole;
+  String: ResolverTypeWrapper<any>;
+  SuccessResponse: ResolverTypeWrapper<any>;
+  UpdateBountyInput: ResolverTypeWrapper<any>;
+  User: ResolverTypeWrapper<PrismaUser>;
+  UserRole: ResolverTypeWrapper<any>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  AuthPayload: Omit<AuthPayload, 'user'> & { user: ResolversParentTypes['User'] };
-  Boolean: Scalars['Boolean']['output'];
-  Bounty: Bounty;
-  CreateBountyInput: CreateBountyInput;
-  CurrentUserBounties: Omit<CurrentUserBounties, 'accepted' | 'created' | 'posted'> & { accepted: Array<ResolversParentTypes['Bounty']>, created: Array<ResolversParentTypes['Bounty']>, posted: Array<ResolversParentTypes['Bounty']> };
-  ID: Scalars['ID']['output'];
-  Int: Scalars['Int']['output'];
+  AuthPayload: any;
+  Boolean: any;
+  Bounty: PrismaBounty;
+  CreateBountyInput: any;
+  CurrentUserBounties: any;
+  ID: any;
+  Int: any;
   Mutation: {};
   Query: {};
-  String: Scalars['String']['output'];
-  SuccessResponse: SuccessResponse;
-  UpdateBountyInput: UpdateBountyInput;
-  User: User;
+  String: any;
+  SuccessResponse: any;
+  UpdateBountyInput: any;
+  User: PrismaUser;
 }>;
 
 export type AuthPayloadResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AuthPayload'] = ResolversParentTypes['AuthPayload']> = ResolversObject<{
