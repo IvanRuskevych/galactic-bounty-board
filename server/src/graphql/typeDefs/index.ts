@@ -65,7 +65,7 @@ export const typeDefs = gql`
 
     type Query {
         currentUser: User
-        allUsers: [User!]!
+        allHunters: [User!]!
         allAvailableBounties: [Bounty!]!
         allCurrentUserBounties: CurrentUserBounties!
     }
