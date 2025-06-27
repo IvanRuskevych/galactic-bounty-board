@@ -6,6 +6,7 @@ export const REGISTER_USER = gql`
             user {
                 id
                 email
+                role
             }
         }
     }
@@ -17,6 +18,7 @@ export const LOGIN_USER = gql`
             user {
                 id
                 email
+                role
             }
         }
     }

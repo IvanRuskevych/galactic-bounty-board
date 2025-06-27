@@ -1,7 +1,7 @@
 import { Card, CardActionArea, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
 import { useAuthStore, useStarWarsStore } from "../../../store";
 import type { BountyCardProps } from "../../../typings";
-import { BountyStatus } from "../../constants";
+import { BountyStatus, UserRoles } from "../../constants";
 import { BountyCardActionButton } from "../../ui";
 
 
@@ -15,6 +15,7 @@ export const BountyCard = ({
 }: BountyCardProps) => {
   const {isAuth, user} = useAuthStore();
   const isOwner = user?.id === bounty.createdBy?.id;
+  const hasRoleAdmin = user?.role === UserRoles.ADMIN
   
   const {getCharacterById} = useStarWarsStore()
   const target = getCharacterById(bounty.targetId)
@@ -49,11 +50,8 @@ export const BountyCard = ({
           );
         
         case BountyStatus.ACCEPTED:
-          return (
-            <>
-              <BountyCardActionButton label={"Accepted by me"} disabled={true}/>
-            </>
-          );
+          return <BountyCardActionButton label={"Accepted by me"} disabled={true}/>
+        
       }
     } else {
       // for not bounty owner
@@ -61,23 +59,17 @@ export const BountyCard = ({
         return (
           <>
             {onAccept && (
-              <>
-                <BountyCardActionButton
-                  label="Accept"
-                  color="success"
-                  onClick={() => onAccept(bounty.id)}
-                />
-              </>
+              <BountyCardActionButton
+                label="Accept"
+                color="success"
+                onClick={() => onAccept(bounty.id)}
+              />
             )}
           </>
         )
       }
       if (bounty.status === BountyStatus.ACCEPTED) {
-        return (
-          <>
-            <BountyCardActionButton label={"Accepted by me"} disabled={true}/>
-          </>
-        )
+        return <BountyCardActionButton label={hasRoleAdmin ? "" : "Accepted by me"} disabled={true}/>
       }
     }
     return null;

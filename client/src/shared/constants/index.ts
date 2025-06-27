@@ -3,3 +3,8 @@ export const BountyStatus = {
   POSTED: "POSTED",
   ACCEPTED: "ACCEPTED",
 }
+
+export const UserRoles = {
+  ADMIN: "ADMIN",
+  HUNTER: "HUNTER",
+}

@@ -110,6 +110,7 @@ export const useBountyStore = create<BountyStore>()(
           set({loading: true, error: null});
           try {
             await BountyService.accept(bountyId)
+            get().fetchPublicBounties()
             get().fetchCurrentUserBounties()
           } catch (err) {
             const {fieldErrors, error} = handleApolloError(err);
