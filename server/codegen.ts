@@ -13,9 +13,10 @@ const config: CodegenConfig = {
       config: {
         useIndexSignature: true,
         contextType: "../context#Context",
+        defaultMapper: "any",
         mappers: {
-          User: "@prisma/client#User",
-          Bounty: "@prisma/client#Bounty",
+          User: "@prisma/client#User as PrismaUser",
+          Bounty: "@prisma/client#Bounty as PrismaBounty",
         },
         avoidOptionals: {
           field: true,
