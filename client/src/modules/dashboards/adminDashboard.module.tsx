@@ -1,12 +1,12 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Accordion, AccordionDetails, AccordionSummary, Box, Container, Typography } from "@mui/material";
 import { useEffect } from "react";
-import { BountyCard } from "../../shared/components";
+import { BountyCard, EmptyState } from "../../shared/components";
 import { useStarWarsStore } from "../../store";
 import { userStore } from "../../store/user.store.ts";
 
 export const AdminDashboard = () => {
-  const {users, fetchAllUsersWithAcceptedBounties} = userStore()
+  const {users, fetchAllUsersWithAcceptedBounties, error, loading} = userStore()
   const {fetchCharacters} = useStarWarsStore()
   
   useEffect(() => {
@@ -38,6 +38,13 @@ export const AdminDashboard = () => {
           </AccordionDetails>
         </Accordion>
       ))}
+      
+      <EmptyState
+        empty={users.length === 0}
+        emptyMessage={"No users found"}
+        loading={loading}
+        error={error}
+      />
     </Container>
   );
 };

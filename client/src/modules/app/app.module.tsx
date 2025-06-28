@@ -1,7 +1,8 @@
-import { CircularProgress, Container, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { Container, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import { useAuthStore } from "../../store";
+import { ToastContainer } from "react-toastify";
 import { Header } from "../header/Header.tsx";
+import "react-toastify/dist/ReactToastify.css"
 
 const theme = createTheme({
   palette: {
@@ -10,16 +11,25 @@ const theme = createTheme({
 });
 
 function App() {
-  const {loading} = useAuthStore();
-  if (loading) return <CircularProgress/>;
-  
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline/>
       <Header/>
       <Container maxWidth="lg" sx={{py: 3}}>
         <Outlet/>
       </Container>
+      
+      <CssBaseline/>
+      <ToastContainer
+        position="top-left"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </ThemeProvider>
   );
 }

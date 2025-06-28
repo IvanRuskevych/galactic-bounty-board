@@ -1,5 +1,5 @@
 import type { Bounty } from "../generated/graphql.ts";
-import type { BountyFormValues } from "../shared/components";
+import type { contextPageType } from "../shared/constants";
 
 export interface BountyStore {
   bounties: Bounty[];
@@ -20,7 +20,6 @@ export interface BountyStore {
   deleteBounty: (bountyId: string) => void;
   postBounty: (bountyId: string) => void;
   acceptBounty: (bountyId: string) => void;
-  
 }
 
 export interface BountyListProps {
@@ -29,7 +28,7 @@ export interface BountyListProps {
   onPost?: (id: string) => void;
   onAccept?: (id: string) => void;
   onDelete?: (id: string) => void;
-  context?: "private" | "public"
+  context?: contextPageType
 }
 
 export interface BountyCardProps {
@@ -38,8 +37,20 @@ export interface BountyCardProps {
   onPost?: (id: string) => void;
   onAccept?: (id: string) => void;
   onDelete?: (id: string) => void;
-  context?: "private" | "public"
+  context?: contextPageType
 }
 
-export type BountyFilterType = "ALL" | "CREATED" | "POSTED" | "ACCEPTED";
+export interface BountyDialogProps {
+  open: boolean;
+  onClose: () => void;
+  onSuccess?: () => void;
+  initialData?: Bounty | null;
+}
 
+export interface BountyFormValues {
+  title: string;
+  description: string;
+  planet: string;
+  reward: number;
+  targetId: number;
+}

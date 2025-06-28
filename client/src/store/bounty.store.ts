@@ -1,9 +1,9 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { BountyService } from "../services";
-import type { BountyFormValues } from "../shared/components";
 import { handleApolloError } from "../shared/utils";
-import type { BountyStore } from "../typings";
+import { notifySuccess } from "../shared/utils/toastify.ts";
+import type { BountyFormValues, BountyStore } from "../typings";
 
 export const useBountyStore = create<BountyStore>()(
   persist(
@@ -54,6 +54,7 @@ export const useBountyStore = create<BountyStore>()(
           try {
             await BountyService.create(data)
             get().fetchCurrentUserBounties()
+            notifySuccess("Bounty created successfully. 📝")
           } catch (err) {
             const {fieldErrors, error} = handleApolloError(err);
             set({fieldErrors, error});
@@ -68,6 +69,7 @@ export const useBountyStore = create<BountyStore>()(
           try {
             await BountyService.update(bountyId, data)
             get().fetchCurrentUserBounties()
+            notifySuccess("Bounty updated successfully. ✏️");
           } catch (err) {
             const {fieldErrors, error} = handleApolloError(err);
             set({fieldErrors, error});
@@ -82,6 +84,7 @@ export const useBountyStore = create<BountyStore>()(
           try {
             await BountyService.delete(bountyId)
             get().fetchCurrentUserBounties()
+            notifySuccess("Bounty deleted 🗑️");
           } catch (err) {
             const {fieldErrors, error} = handleApolloError(err);
             set({fieldErrors, error});
@@ -97,6 +100,7 @@ export const useBountyStore = create<BountyStore>()(
           try {
             await BountyService.post(bountyId)
             get().fetchCurrentUserBounties()
+            notifySuccess("Bounty posted successfully.")
           } catch (err) {
             const {fieldErrors, error} = handleApolloError(err);
             set({fieldErrors, error});
@@ -112,6 +116,7 @@ export const useBountyStore = create<BountyStore>()(
             await BountyService.accept(bountyId)
             get().fetchPublicBounties()
             get().fetchCurrentUserBounties()
+            notifySuccess("Bounty accepted successfully.")
           } catch (err) {
             const {fieldErrors, error} = handleApolloError(err);
             set({fieldErrors, error});

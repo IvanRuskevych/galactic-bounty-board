@@ -1,9 +1,8 @@
 import { Card, CardActionArea, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
 import { useAuthStore, useStarWarsStore } from "../../../store";
 import type { BountyCardProps } from "../../../typings";
-import { BountyStatus, UserRoles } from "../../constants";
+import { BountyStatus, contextPage, UserRoles } from "../../constants";
 import { BountyCardActionButton } from "../../ui";
-
 
 export const BountyCard = ({
   bounty,
@@ -11,7 +10,7 @@ export const BountyCard = ({
   onPost,
   onAccept,
   onDelete,
-  context = "private",
+  context = contextPage.PRIVATE,
 }: BountyCardProps) => {
   const {isAuth, user} = useAuthStore();
   const isOwner = user?.id === bounty.createdBy?.id;
@@ -23,7 +22,7 @@ export const BountyCard = ({
   const renderActions = () => {
     if (!isAuth) return null;
     
-    if (context === "public" && bounty.status === BountyStatus.POSTED && isOwner) {
+    if (context === contextPage.PRIVATE && bounty.status === BountyStatus.POSTED && isOwner) {
       return (
         <BountyCardActionButton label="Posted by me" disabled/>
       );

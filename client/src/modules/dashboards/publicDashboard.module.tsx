@@ -1,6 +1,7 @@
-import { CircularProgress, Container, Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import { useEffect } from "react";
-import { BountyList } from "../../shared/components";
+import { BountyList, EmptyState } from "../../shared/components";
+import { contextPage } from "../../shared/constants";
 import { useBountyStore, useStarWarsStore } from "../../store";
 
 export const PublicDashboard = () => {
@@ -22,11 +23,16 @@ export const PublicDashboard = () => {
       <BountyList
         bounties={bounties}
         onAccept={handleAccept}
-        context={"public"}
+        context={contextPage.PUBLIC}
       />
-      {bounties.length === 0 && <Typography>No bounties found.</Typography>}
-      {error && <Typography color="error">{error}</Typography>}
-      {loading && <CircularProgress/>}
+      
+      <EmptyState
+        empty={bounties.length === 0}
+        emptyMessage={"No bounties found"}
+        loading={loading}
+        error={error}
+      />
+    
     </Container>
   );
 };

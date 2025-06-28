@@ -3,13 +3,15 @@ import { Box, Button, IconButton, InputAdornment, TextField, Typography } from "
 import { type FC, type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../store";
+import type { AuthFormProps } from "../../../typings";
+import { AuthAction } from "../../constants";
 import { ROUTER_KEYS } from "../../keys";
 import { AuthHint } from "../../ui";
-import type { AuthFormProps } from "./types.ts";
+import { EmptyState } from "../EmptyState/EmptyState.tsx";
 
 export const AuthForm: FC<AuthFormProps> = ({mode}) => {
   const navigate = useNavigate();
-  const {login, register, loading, fieldErrors} = useAuthStore();
+  const {login, register, loading, fieldErrors, resetErrors} = useAuthStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -17,18 +19,20 @@ export const AuthForm: FC<AuthFormProps> = ({mode}) => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     
-    if (mode === "login") {
+    if (mode === AuthAction.LOGIN) {
       login(email, password);
       navigate(ROUTER_KEYS.DASHBOARD);
     } else {
       register(email, password);
-      navigate(ROUTER_KEYS.DASHBOARD);
+      if (!resetErrors) navigate(ROUTER_KEYS.DASHBOARD);
     }
   };
   
+  if (loading) return <EmptyState loading={loading}/>
+  
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{mt: 2, mx: "auto", maxWidth: "500px", width: "100%"}}>
-      <Typography variant="h3" sx={{fontWeight: "bold"}}>{mode === "login" ? "Login" : "Register"}</Typography>
+      <Typography variant="h3" sx={{fontWeight: "bold"}}>{mode === AuthAction.LOGIN ? "Login" : "Register"}</Typography>
       <TextField
         fullWidth
         label="Email"
@@ -68,13 +72,13 @@ export const AuthForm: FC<AuthFormProps> = ({mode}) => {
       />
       <Button fullWidth type="submit" variant="contained" disabled={loading}
               sx={{mt: 2, maxWidth: "100px", width: "100%"}}>
-        {loading ? (mode === "login" ? "Logging in..." : "Registering...") : (mode === "login" ? "Login" : "Register")}
+        {mode === AuthAction.LOGIN ? "Login" : "Register"}
       </Button>
       
-      {mode === "login" && (
+      {mode === AuthAction.LOGIN && (
         <AuthHint text={"Don't have an account?"} linkText={"Register"} linkTo={ROUTER_KEYS.REGISTER}/>
       )}
-      {mode === "register" && (
+      {mode === AuthAction.REGISTER && (
         <AuthHint text={"Already have an account?"} linkText={"Login"} linkTo={ROUTER_KEYS.LOGIN}/>
       )}
     </Box>

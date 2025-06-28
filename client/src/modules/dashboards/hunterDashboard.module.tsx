@@ -1,12 +1,10 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import type { Bounty } from "../../generated/graphql.ts";
-import { BountyDialog, BountyList } from "../../shared/components";
+import { BountyDialog, BountyList, EmptyState } from "../../shared/components";
+import { BOUNTY_FILTERS, type BountyFilterType, contextPage } from "../../shared/constants";
 import { filterBounties } from "../../shared/utils";
 import { useBountyStore, useStarWarsStore } from "../../store";
-
-const FILTERS = ["ALL", "CREATED", "POSTED", "ACCEPTED"] as const;
-type FilterType = typeof FILTERS[number];
 
 export const HunterDashboard = () => {
   const {
@@ -18,10 +16,12 @@ export const HunterDashboard = () => {
     deleteBounty,
     postBounty,
     acceptBounty,
+    error,
+    loading,
   } = useBountyStore();
   const {fetchCharacters} = useStarWarsStore();
   
-  const [filter, setFilter] = useState<FilterType>("ALL");
+  const [filter, setFilter] = useState<BountyFilterType>("ALL");
   const [editingBounty, setEditingBounty] = useState<Bounty | null>(null)
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -81,7 +81,7 @@ export const HunterDashboard = () => {
           />
           
           <Box display="flex" gap={1} flexWrap="wrap" justifyContent={{xs: "center", sm: "flex-start"}}>
-            {FILTERS.map((type) => (
+            {BOUNTY_FILTERS.map((type) => (
               <Button
                 key={type}
                 variant={filter === type ? "contained" : "outlined"}
@@ -99,9 +99,17 @@ export const HunterDashboard = () => {
           onPost={handlePost}
           onAccept={handleAccept}
           onDelete={handleDelete}
+          context={contextPage.PRIVATE}
         />
-        {filteredBounties.length === 0 && <Typography>No bounties found.</Typography>}
+        
+        <EmptyState
+          empty={filteredBounties.length === 0}
+          emptyMessage={"No bounties found"}
+          loading={loading}
+          error={error}
+        />
       </Container>
+      
       <BountyDialog
         open={dialogOpen}
         onClose={() => {

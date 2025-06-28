@@ -1,15 +1,16 @@
 import { Button } from "@mui/material";
 import type { FC } from "react";
+import { AuthAction, type AuthActionType } from "../constants";
 
 interface AuthButtonProps {
-  type: "login" | "logout";
+  mode: AuthActionType;
   onClick: () => void;
 }
 
-export const AuthButton: FC<AuthButtonProps> = ({type, onClick, ...props}) => {
+export const AuthButton: FC<AuthButtonProps> = ({mode, onClick, ...props}) => {
   return (
     <Button color="inherit" onClick={onClick} {...props}>
-      {type === "login" ? "Login" : "Logout"}
+      {mode === AuthAction.LOGIN ? "Login" : "Logout"}
     </Button>
   );
 };

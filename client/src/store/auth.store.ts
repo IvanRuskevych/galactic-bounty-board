@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { AuthService } from "../services";
 import { handleApolloError } from "../shared/utils";
+import { notifyError, notifySuccess } from "../shared/utils/toastify.ts";
 import type { AuthStore } from "../typings";
 import { useBountyStore } from "./bounty.store.ts";
 import { useStarWarsStore } from "./starWars.store.ts";
@@ -20,11 +21,11 @@ export const useAuthStore = create<AuthStore>()(
         try {
           const {data} = await AuthService.register(email, password);
           set({user: data.registerUser.user, isAuth: true});
-          // todo: use react-toastify for show notifications
-          // toast.success("Registration successful");
+          notifySuccess("Registration successful");
         } catch (err) {
           const {fieldErrors, error} = handleApolloError(err);
           set({fieldErrors, error});
+          if (error) notifyError(error);
           throw err;
         } finally {
           set({loading: false});
@@ -36,11 +37,11 @@ export const useAuthStore = create<AuthStore>()(
         try {
           const {data} = await AuthService.login(email, password);
           set({user: data.loginUser.user, isAuth: true});
-          // todo: use react-toastify for show notifications
-          // toast.success("Login successful");
+          notifySuccess("Login successful");
         } catch (err) {
           const {fieldErrors, error} = handleApolloError(err);
           set({fieldErrors, error});
+          if (error) notifyError(error);
           throw err;
         } finally {
           set({loading: false});
@@ -55,15 +56,19 @@ export const useAuthStore = create<AuthStore>()(
           set({user: null, isAuth: false});
           useBountyStore.getState().reset()
           useStarWarsStore.getState().reset()
-          // todo: use react-toastify for show notifications
-          // toast.success("Logout successful");
+          notifySuccess("Logout successful");
         } catch (err) {
           const {fieldErrors, error} = handleApolloError(err);
           set({fieldErrors, error});
+          if (error) notifyError(error);
           throw err;
         } finally {
           set({loading: false});
         }
+      },
+      
+      resetErrors: () => {
+        set({fieldErrors: null, error: null});
       },
     }),
     {

@@ -1,5 +1,5 @@
 import type { Bounty } from "../../generated/graphql";
-import type { BountyFilterType } from "../../typings";
+import type { BountyFilterType } from "../constants";
 
 export function filterBounties(
   allBounties: Bounty[],

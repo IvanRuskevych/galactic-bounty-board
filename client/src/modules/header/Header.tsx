@@ -1,6 +1,6 @@
 import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { UserRoles } from "../../shared/constants";
+import { AuthAction, UserRoles } from "../../shared/constants";
 import { ROUTER_KEYS } from "../../shared/keys";
 import { AuthButton, NavigationButton } from "../../shared/ui";
 import { useAuthStore } from "../../store";
@@ -13,7 +13,7 @@ export const Header = () => {
   const hasHunterRole = user?.role === UserRoles.HUNTER;
   
   const handleLogout = async () => {
-    logout();
+    await logout();
     navigate(ROUTER_KEYS.HOME);
   };
   
@@ -28,14 +28,14 @@ export const Header = () => {
         {/* Center: Navigation buttons */}
         <Box sx={{display: "flex", textAlign: "center"}}>
           {hasAdminRole && <NavigationButton to={ROUTER_KEYS.ADMIN} label="Admin panel"/>}
-          {hasHunterRole && <NavigationButton to={ROUTER_KEYS.HOME} label="Public Bounties"/>}
+          <NavigationButton to={ROUTER_KEYS.HOME} label="Public Bounties"/>
           {isAuth && hasHunterRole && <NavigationButton to={ROUTER_KEYS.DASHBOARD} label="My Bounties"/>}
         </Box>
         
         {/* Right: Auth buttons */}
         <Box>
           {isAuth ?
-            (<AuthButton type="logout" onClick={handleLogout}/>)
+            (<AuthButton mode={AuthAction.LOGOUT} onClick={handleLogout}/>)
             :
             (<NavigationButton to={ROUTER_KEYS.LOGIN} label="Login"/>)}
         </Box>

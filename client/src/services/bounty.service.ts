@@ -1,7 +1,7 @@
 import { apolloClient } from "../apollo/client";
 import { ACCEPT_BOUNTY, CREATE_BOUNTY, DELETE_BOUNTY, POST_BOUNTY, UPDATE_BOUNTY } from "../graphql/mutations";
 import { GET_AVAILABLE_BOUNTIES, GET_CURRENT_USER_BOUNTIES } from "../graphql/queries";
-import type { BountyFormValues } from "../shared/components";
+import type { BountyFormValues } from "../typings";
 
 export const BountyService = {
   getPublic: () => {

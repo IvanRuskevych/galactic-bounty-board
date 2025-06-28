@@ -3,14 +3,6 @@ import { type FormEvent, useEffect, useState } from "react";
 import type { Bounty } from "../../../generated/graphql";
 import { useBountyStore, useStarWarsStore } from "../../../store";
 
-export interface BountyFormValues {
-  title: string;
-  description: string;
-  planet: string;
-  reward: number;
-  targetId: number;
-}
-
 export const BountyForm = ({
   initialValues,
   onSubmitSuccess,

@@ -1,13 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import type { Bounty } from "../../../generated/graphql";
+import type { BountyDialogProps } from "../../../typings";
 import { BountyForm } from "../BountyForm/BountyForm.tsx";
-
-interface BountyDialogProps {
-  open: boolean;
-  onClose: () => void;
-  onSuccess?: () => void;
-  initialData?: Bounty | null;
-}
 
 export const BountyDialog = ({
   open,
