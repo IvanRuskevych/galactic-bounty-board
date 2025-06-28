@@ -1,7 +1,54 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
+/* 1. Improved font rendering */
+body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeSpeed;
 }
 
+/* 2. Media elements do not exceed container limits */
+img,
+picture,
+video,
+canvas,
+svg {
+    max-width: 100%;
+}
 
+/* 3. Improved table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* 4. Text formatting */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr {
+    overflow-wrap: break-word;
+}
+
+/* 5. Reset styles for form elements */
+input,
+button,
+textarea,
+select {
+    font: inherit;
+    color: inherit;
+}
+
+/* 6. Set smooth scrolling behavior */
+html,
+body {
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+html::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+    scroll-behavior: smooth;
+}
