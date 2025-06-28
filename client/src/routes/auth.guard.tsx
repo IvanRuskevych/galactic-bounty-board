@@ -31,3 +31,10 @@ export const HomeAccessGuard = () => {
   
   return <Navigate to={ROUTER_KEYS.ADMIN} replace/>;
 };
+
+export const GuestGuard = () => {
+  const {isAuth} = useAuthStore();
+  
+  if (isAuth) return <Navigate to={ROUTER_KEYS.DASHBOARD} replace/>;
+  return <Outlet/>;
+};
