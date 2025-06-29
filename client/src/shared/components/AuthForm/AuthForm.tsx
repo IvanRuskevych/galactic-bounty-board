@@ -1,6 +1,6 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Box, Button, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
-import { type FC, type FormEvent, useState } from "react";
+import { type FC, type FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../store";
 import type { AuthFormProps } from "../../../typings";
@@ -21,12 +21,16 @@ export const AuthForm: FC<AuthFormProps> = ({mode}) => {
     
     if (mode === AuthAction.LOGIN) {
       login(email, password);
-      navigate(ROUTER_KEYS.DASHBOARD);
+      if (!resetErrors) navigate(ROUTER_KEYS.DASHBOARD);
     } else {
       register(email, password);
       if (!resetErrors) navigate(ROUTER_KEYS.DASHBOARD);
     }
   };
+  
+  useEffect(() => {
+    resetErrors()
+  }, [mode]);
   
   if (loading) return <EmptyState loading={loading}/>
   

@@ -1,8 +1,10 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import type { Bounty } from "../../generated/graphql.ts";
 import { BountyDialog, BountyList, EmptyState } from "../../shared/components";
 import { BOUNTY_FILTERS, type BountyFilterType, contextPage } from "../../shared/constants";
+import { useInfiniteScroll } from "../../shared/hooks";
 import { filterBounties, sortBounties } from "../../shared/utils";
 import { useBountyStore, useStarWarsStore } from "../../store";
 
@@ -51,6 +53,8 @@ export const HunterDashboard = () => {
     acceptBounty(bountyId);
   }
   
+  const {items, hasMore, loadMore} = useInfiniteScroll(sortedBounties)
+  
   useEffect(() => {
     fetchCurrentUserBounties();
     fetchCharacters()
@@ -96,14 +100,17 @@ export const HunterDashboard = () => {
           </Box>
         </Box>
         
-        <BountyList
-          bounties={sortedBounties}
-          onEdit={handleEdit}
-          onPost={handlePost}
-          onAccept={handleAccept}
-          onDelete={handleDelete}
-          context={contextPage.PRIVATE}
-        />
+        <InfiniteScroll next={loadMore} hasMore={hasMore} loader={""} dataLength={items.length}>
+          <BountyList
+            bounties={sortedBounties}
+            onEdit={handleEdit}
+            onPost={handlePost}
+            onAccept={handleAccept}
+            onDelete={handleDelete}
+            context={contextPage.PRIVATE}
+          />
+        </InfiniteScroll>
+        
         
         <EmptyState
           empty={filteredBounties.length === 0}
