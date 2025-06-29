@@ -56,7 +56,7 @@ export const useAuthStore = create<AuthStore>()(
           set({user: null, isAuth: false});
           useBountyStore.getState().reset()
           useStarWarsStore.getState().reset()
-          notifySuccess("Logout successful");
+          // notifySuccess("Logout successful");
         } catch (err) {
           const {fieldErrors, error} = handleApolloError(err);
           set({fieldErrors, error});

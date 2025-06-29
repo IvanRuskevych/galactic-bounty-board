@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthAction, UserRoles } from "../../shared/constants";
 import { ROUTER_KEYS } from "../../shared/keys";
 import { AuthButton, NavigationButton } from "../../shared/ui";
+import { notifySuccess } from "../../shared/utils/toastify.ts";
 import { useAuthStore } from "../../store";
 
 export const Header = () => {
@@ -15,6 +16,7 @@ export const Header = () => {
   const handleLogout = async () => {
     await logout();
     navigate(ROUTER_KEYS.HOME);
+    notifySuccess("Logout successful");
   };
   
   return (
@@ -28,7 +30,7 @@ export const Header = () => {
         {/* Center: Navigation buttons */}
         <Box sx={{display: "flex", textAlign: "center"}}>
           {hasAdminRole && <NavigationButton to={ROUTER_KEYS.ADMIN} label="Admin panel"/>}
-          <NavigationButton to={ROUTER_KEYS.HOME} label="Public Bounties"/>
+          {!hasAdminRole && <NavigationButton to={ROUTER_KEYS.HOME} label="Public Bounties"/>}
           {isAuth && hasHunterRole && <NavigationButton to={ROUTER_KEYS.DASHBOARD} label="My Bounties"/>}
         </Box>
         

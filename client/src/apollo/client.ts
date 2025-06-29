@@ -1,7 +1,12 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloClient, from, HttpLink, InMemoryCache } from "@apollo/client";
+import { errorLink } from "./errorLink.ts";
+
+const httpLink = new HttpLink({
+  uri: import.meta.env.VITE_GRAPHQL_API_URL,
+  credentials: 'include',
+})
 
 export const apolloClient = new ApolloClient({
-  uri: import.meta.env.VITE_GRAPHQL_API_URL,
+  link: from([errorLink, httpLink]),
   cache: new InMemoryCache(),
-  credentials: 'include',
 });
