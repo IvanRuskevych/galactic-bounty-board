@@ -1,7 +1,8 @@
 import { Container, Typography } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { BountyList, EmptyState } from "../../shared/components";
 import { contextPage } from "../../shared/constants";
+import { sortBounties } from "../../shared/utils";
 import { useBountyStore, useStarWarsStore } from "../../store";
 
 export const PublicDashboard = () => {
@@ -12,6 +13,10 @@ export const PublicDashboard = () => {
     acceptBounty(bountyId);
   }
   
+  const sortedBounties = useMemo(() => {
+    return sortBounties(bounties, "title", "asc");
+  }, [bounties])
+  
   useEffect(() => {
     fetchPublicBounties();
     fetchCharacters()
@@ -21,7 +26,7 @@ export const PublicDashboard = () => {
     <Container>
       <Typography variant="h4" sx={{p: 1}}> Available Bounties </Typography>
       <BountyList
-        bounties={bounties}
+        bounties={sortedBounties}
         onAccept={handleAccept}
         context={contextPage.PUBLIC}
       />

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Bounty } from "../../generated/graphql.ts";
 import { BountyDialog, BountyList, EmptyState } from "../../shared/components";
 import { BOUNTY_FILTERS, type BountyFilterType, contextPage } from "../../shared/constants";
-import { filterBounties } from "../../shared/utils";
+import { filterBounties, sortBounties } from "../../shared/utils";
 import { useBountyStore, useStarWarsStore } from "../../store";
 
 export const HunterDashboard = () => {
@@ -32,6 +32,9 @@ export const HunterDashboard = () => {
     return filterBounties(allBounties, filter, search);
   }, [allBounties, filter, search]);
   
+  const sortedBounties = useMemo(() => {
+    return sortBounties(filteredBounties, "title", "asc");
+  }, [filteredBounties])
   
   const handleEdit = (bounty: Bounty) => {
     setEditingBounty(bounty);
@@ -94,7 +97,7 @@ export const HunterDashboard = () => {
         </Box>
         
         <BountyList
-          bounties={filteredBounties}
+          bounties={sortedBounties}
           onEdit={handleEdit}
           onPost={handlePost}
           onAccept={handleAccept}
