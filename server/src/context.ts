@@ -20,7 +20,7 @@ export const context = async ({req, res}: ExpressContextFunctionArgument): Promi
       const user = await prisma.user.findUnique({where: {id}});
       if (user) currentUser = user;
     } catch (err) {
-      console.warn("Unable to authenticate token: ", err);
+      console.error("Unable to authenticate token: ", err);
     }
   }
   
