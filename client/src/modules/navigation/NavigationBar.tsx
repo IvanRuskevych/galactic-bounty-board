@@ -35,8 +35,8 @@ export const NavigationBar = () => {
   };
   
   useEffect(() => {
-    fetchCurrentUser()
-  }, [fetchCurrentUser])
+    if (isAuth) fetchCurrentUser()
+  }, [fetchCurrentUser, isAuth])
   
   return (
     <Box sx={{display: "flex"}}>

@@ -31,8 +31,7 @@ export const useUserStore = create<UserStore>()(
         set({loading: true, error: null});
         try {
           const {data} = await UserServices.getCurrentUser();
-          console.log({data});
-          set({currentUser: data.currentUser});
+          set({currentUser: data?.currentUser || null});
         } catch (err) {
           const {fieldErrors, error} = handleApolloError(err);
           set({fieldErrors, error});
