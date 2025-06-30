@@ -16,10 +16,12 @@ jobs:
 
       - name: Setup Node
         uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
       - name: Install dependencies
         working-directory: ./client
-        uses: bahmutov/npm-install@v1
+        run: npm ci
 
       - name: Build project
         working-directory: ./client
@@ -35,7 +37,6 @@ jobs:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Download artifact
