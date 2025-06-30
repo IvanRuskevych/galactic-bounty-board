@@ -1,103 +1,173 @@
-# galactic-bounty-board
+# 🌌 Galactic Bounty Board
 
-# 🚀 Galactic Bounty Board — Backend
+Galactic Bounty Board is a full-stack web application where users can create, manage, and accept bounties for characters
+from the Star Wars universe.
 
-This is the **backend** part of the Galactic Bounty Board project, built using:
+This monorepo contains:
 
-- **Node.js / TypeScript**
-- **GraphQL**
-- **Express.js**
-- **Prisma ORM**
-- **PostgreSQL**
+- 🧠 **Backend** – GraphQL API with Node.js, PostgreSQL, Prisma
+- 🎨 **Frontend** – React + Apollo Client + Zustand + MUI
 
 ---
 
-## ⚙️ Requirements
+## 🔧 Features
+
+- 🪐 Public bounty board (view available bounties)
+- 🔒 Role-based access (Hunter / Admin)
+- ✍️ Create, edit, delete, post, and accept bounties
+- 🌌 Star Wars character selector (via external API)
+- 🔐 Authentication with Refresh/Access tokens via cookies
+- ✅ Form validation using Zod
+- 🔄 Infinite scroll, filtering, sorting, and client-side pagination
+- 📢 Real-time error handling with toast notifications
+
+---
+
+## 📦 Backend – `/server`
+
+### 🛠 Technologies
+
+- **Node.js / TypeScript**
+- **GraphQL (Apollo Server v4)**
+- **Express.js**
+- **Prisma ORM**
+- **PostgreSQL**
+- **Zod**, **JWT**, **bcrypt**, **dotenv**
+
+### ⚙️ Requirements
 
 - Node.js >= 18
 - PostgreSQL instance
 - Recommended: pnpm / yarn / npm
 
----
+### 🚀 Getting Started
 
-## 📦 Technologies
-
-- **Apollo Server v4** – GraphQL server
-- **Prisma ORM** – database client & migrations
-- **PostgreSQL** – relational database
-- **Zod** – schema validation
-- **jsonwebtoken** – JWT auth
-- **bcrypt** – password hashing
-- **dotenv** – environment configuration
-- **TypeScript** – typed codebase
-
----
-
-## 🚀 Getting Started
-
-### 1️⃣ Clone repository
+#### 1️⃣ Clone & Install
 
 ```bash
-    git clone <your-repo-url>
-    cd galactic-bounty-board/server 
-```
-
-### 2️⃣ Install dependencies
-
-```bash
+    git clone https://github.com/IvanRuskevych/galactic-bounty-board.git
+    cd galactic-bounty-board/server
     npm install
 ```
 
-### 3️⃣ Setup environment variables
-
-Create a .env file by copy .env.example file in the root of server/ and fill the environments
-
-### 4️⃣ Setup database with Prisma
-
-Run migrations:
+#### 2️⃣ Create environment file
 
 ```bash
-    npx prisma migrate dev --name init
+    cp .env.example .env
+    # Fill in DB connection string and JWT secrets
 ```
 
-Generate Prisma client:
+#### 3️⃣ Set up the database
 
 ```bash
-    npx prisma generate
+npx prisma migrate dev --name init
+npx prisma generate
 ```
 
-### 5️⃣ Run the server
-
-Run in dev mode:
+#### 4️⃣ Start the server
 
 ```bash
-    npm run dev
+npm run dev
 ```
 
-(Optional) Open Prisma Studio (DB GUI):
+Open GraphQL playground at:
+
+```
+http://localhost:8000/galactic-bounty
+```
+
+#### 5️⃣ (Optional) Open Prisma Studio
 
 ```bash
-    npx prisma studio
+npx prisma studio
 ```
 
-💡 You can test GraphQL req/res by using: http://localhost:8000/galactic-bounty
-
-Build production:
+#### 6️⃣ Generate GraphQL types
 
 ```bash
-    npm run build
+npm run codegen
 ```
 
-Run production:
+#### ⚙️ Production
 
 ```bash
-    npm run start
+npm run build
+npm run start
 ```
 
-### 6️⃣ Run GraphQL Codegen
+---
+
+## 💻 Frontend – `/client`
+
+### 🛠 Technologies
+
+- **React + TypeScript**
+- **Apollo Client**
+- **Zustand** (state management)
+- **Material UI (MUI v5)**
+- **React Router v6**
+- **Vite**
+
+### 🚀 Getting Started
+
+#### 1️⃣ Navigate and install dependencies
 
 ```bash
-    npm run codegen
+    cd ../client
+    npm install
 ```
 
-💡 Generates TypeScript types & hooks from GraphQL schema.
+#### 2️⃣ Setup environment
+
+```bash
+    cp .env.example .env
+    # Configure VITE_GRAPHQL_API_URL=http://localhost:8000/galactic-bounty
+```
+
+#### 3️⃣ Start the app
+
+```bash
+  npm run dev
+```
+
+App will be available at:
+
+```
+    http://localhost:5173
+```
+
+---
+
+## 🧪 How to Use
+
+- 🔐 **Register or Login** (role by default - HUNTER)
+- 🛠 **Hunter Dashboard** allows creating & managing bounties
+- 🌐 **Public Bounty Board** shows all posted bounties
+- 📤 **Create, Post, Edit and Accept Bounties** as a Hunter
+- 🛰 **Admin Panel** shows all accepted bounties by users
+
+---
+
+## 🧱 Folder Structure
+
+```bash
+galactic-bounty-board/
+│
+├── client/     # React frontend (MUI, Apollo, Zustand)
+│   └── ...
+├── server/     # Node.js backend (GraphQL, Prisma, PostgreSQL)
+│   └── ...
+└── README.md   # Project documentation
+```
+
+---
+
+## ✅ License
+
+MIT — free to use, modify, and contribute.
+
+---
+
+## 📩 Contact
+
+For questions or suggestions, feel free to open an issue or contact the author.
