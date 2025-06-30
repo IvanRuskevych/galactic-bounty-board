@@ -1,5 +1,5 @@
-import { Context } from "../context";
-import { userRepository } from "../repositories";
+import { Context }                       from "../context";
+import { userRepository }                from "../repositories";
 import { requireAuth, requireRoleAdmin } from "../utils";
 
 export const userService = {
@@ -15,5 +15,10 @@ export const userService = {
     requireAuth(ctx)
     requireRoleAdmin(ctx)
     return userRepository.getAllHunters(ctx.prisma)
+  },
+  
+  getCurrentUser: (ctx: Context) => {
+    requireAuth(ctx)
+    return userRepository.getById(ctx.prisma, ctx.currentUser!.id)
   },
 };
