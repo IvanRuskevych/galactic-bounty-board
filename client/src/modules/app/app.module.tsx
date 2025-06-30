@@ -1,8 +1,8 @@
 import { Container, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { Header } from "../header/Header.tsx";
 import "react-toastify/dist/ReactToastify.css"
+import { NavigationBar } from "../navigation/NavigationBar.tsx";
 
 const theme = createTheme({
   palette: {
@@ -13,8 +13,9 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Header/>
-      <Container maxWidth="lg" sx={{py: 3}}>
+      <NavigationBar/>
+      
+      <Container maxWidth="lg" sx={{pt: 10}}>
         <Outlet/>
       </Container>
       

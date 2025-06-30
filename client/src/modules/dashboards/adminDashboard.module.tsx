@@ -4,10 +4,10 @@ import { useEffect, useMemo } from "react";
 import { BountyCard, EmptyState } from "../../shared/components";
 import { sortBounties } from "../../shared/utils";
 import { useStarWarsStore } from "../../store";
-import { userStore } from "../../store/user.store.ts";
+import { useUserStore } from "../../store/user.store.ts";
 
 export const AdminDashboard = () => {
-  const {users, fetchAllUsersWithAcceptedBounties, error, loading} = userStore()
+  const {users, fetchAllUsersWithAcceptedBounties, error, loading} = useUserStore()
   const {fetchCharacters} = useStarWarsStore()
   
   useEffect(() => {

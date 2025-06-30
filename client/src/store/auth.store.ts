@@ -6,6 +6,7 @@ import { notifyError, notifySuccess } from "../shared/utils/toastify.ts";
 import type { AuthStore } from "../typings";
 import { useBountyStore } from "./bounty.store.ts";
 import { useStarWarsStore } from "./starWars.store.ts";
+import { useUserStore } from "./user.store.ts";
 
 export const useAuthStore = create<AuthStore>()(
   persist(
@@ -56,7 +57,7 @@ export const useAuthStore = create<AuthStore>()(
           set({user: null, isAuth: false});
           useBountyStore.getState().reset()
           useStarWarsStore.getState().reset()
-          // notifySuccess("Logout successful");
+          useUserStore.getState().reset()
         } catch (err) {
           const {fieldErrors, error} = handleApolloError(err);
           set({fieldErrors, error});

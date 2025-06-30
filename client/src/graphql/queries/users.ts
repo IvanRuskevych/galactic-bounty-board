@@ -22,3 +22,12 @@ export const GET_ALL_HUNTERS_WITH_ACCEPTED_BOUNTIES = gql`
         }
     }
 `
+
+export const GET_CURRENT_USER = gql`
+    query GetCurrentUser {
+        currentUser {
+            email
+            role
+        }
+    }
+`
