@@ -22,7 +22,7 @@ export const BountyCard = ({
   const renderActions = () => {
     if (!isAuth) return null;
     
-    if (context === contextPage.PRIVATE && bounty.status === BountyStatus.POSTED && isOwner) {
+    if (context === contextPage.PUBLIC && bounty.status === BountyStatus.POSTED && isOwner) {
       return (
         <BountyCardActionButton label="Posted by me" disabled/>
       );
