@@ -19,12 +19,27 @@ export function requireNotOwnership(userId: string, ownerId: string) {
 }
 
 export function setAuthCookies(accessToken: string, refreshToken: string, ctx: Context) {
-  ctx.res.cookie("accessToken", accessToken, {httpOnly: true, maxAge: 60 * 60 * 1000});
-  ctx.res.cookie("refreshToken", refreshToken, {httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000});
+  ctx.res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+  ctx.res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
 }
 
 export function setAccessTokenCookies(accessToken: string, ctx: Context) {
-  ctx.res.cookie("accessToken", accessToken, {httpOnly: true, maxAge: 60 * 60 * 1000});
+  ctx.res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 24 * 60 * 60 * 1000,
+  });
 }
 
 export function clearAuthCookies(ctx: Context) {
