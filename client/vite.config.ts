@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/galactic-bounty-board',
+  base: '/galactic-bounty-board/',
   build: {
     rollupOptions: {
       output: {
