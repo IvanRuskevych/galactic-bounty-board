@@ -13,7 +13,7 @@ import { authService, bountyService, userService } from "../../services";
 
 export const resolvers: Resolvers = {
   Query: {
-    currentUser: (_p: unknown, _args: unknown, ctx: Context) => userService.getById(ctx.currentUser!.id, ctx),
+    currentUser: (_p: unknown, _args: unknown, ctx: Context) => userService.getCurrentUser(ctx),
     allHunters: (_p: unknown, _args: unknown, ctx: Context) => userService.getAllHunters(ctx),
     allAvailableBounties: (_p: unknown, _args: unknown, ctx: Context) => bountyService.getAvailable(ctx),
     allCurrentUserBounties: (_p: unknown, _args: unknown, ctx: Context) => bountyService.getCurrentUserBounties(ctx),
