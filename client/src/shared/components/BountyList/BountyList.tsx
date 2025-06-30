@@ -12,7 +12,7 @@ export const BountyList: FC<BountyListProps> = ({
   context,
 }) => {
   return (
-    <Grid container spacing={2} sx={{display: "flex", justifyContent: "center"}}>
+    <Grid container spacing={2} sx={{display: "flex", justifyContent: "center", py: 2}}>
       {bounties.map((bounty) => (
         <Grid key={bounty.id} sx={{height: "100%"}}>
           <BountyCard
