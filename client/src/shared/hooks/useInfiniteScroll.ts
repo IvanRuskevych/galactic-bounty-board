@@ -7,7 +7,6 @@ export const useInfiniteScroll = (items: Bounty[]) => {
   const [visibleCount, setVisibleCount] = useState(PER_PAGE)
   
   const loadMore = () => {
-    console.log("Loading more...");
     setVisibleCount(prev => prev + PER_PAGE)
   }
   

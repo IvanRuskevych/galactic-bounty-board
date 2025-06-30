@@ -4,17 +4,10 @@ import PublicIcon from "@mui/icons-material/Public";
 import { ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import type { FC } from "react";
 import { ROUTER_KEYS } from "../../../keys";
-
-export interface SideBarLinkProps {
-  isAuth?: boolean;
-  hasAdminRole?: boolean;
-  hasHunterRole?: boolean;
-  onNavigate: (path: string) => void;
-}
+import type { SideBarLinkProps } from "./types.ts";
 
 export const SideBarLink: FC<SideBarLinkProps> = (
   {
-    // isAuth,
     hasAdminRole,
     hasHunterRole,
     onNavigate,
@@ -24,8 +17,7 @@ export const SideBarLink: FC<SideBarLinkProps> = (
     <>
       {/*Admin Dashboard*/}
       {hasAdminRole && (
-        // TODO: disablePadding
-        <ListItem>
+        <ListItem disablePadding>
           <ListItemButton onClick={() => onNavigate(ROUTER_KEYS.ADMIN)}>
             <ListItemIcon>
               <AdminPanelSettingsIcon/>
@@ -36,10 +28,8 @@ export const SideBarLink: FC<SideBarLinkProps> = (
       )}
       
       {/*Hunter Dashboard*/}
-      {/* TODO: isAuth */}
       {hasHunterRole && (
-        // TODO: disablePadding
-        <ListItem>
+        <ListItem disablePadding>
           <ListItemButton onClick={() => onNavigate(ROUTER_KEYS.DASHBOARD)}>
             <ListItemIcon>
               <PersonIcon/>
@@ -51,7 +41,7 @@ export const SideBarLink: FC<SideBarLinkProps> = (
       
       {/*Public Dashboard*/}
       {!hasAdminRole && (
-        <ListItem>
+        <ListItem disablePadding>
           <ListItemButton onClick={() => onNavigate(ROUTER_KEYS.HOME)}>
             <ListItemIcon>
               <PublicIcon/>

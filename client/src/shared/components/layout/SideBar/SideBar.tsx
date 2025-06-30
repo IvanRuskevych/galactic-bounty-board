@@ -7,7 +7,6 @@ import { SideBarLink } from "./SideBarLink.tsx";
 import { drawerWidth } from "./styled.ts";
 import type { SideBarProps } from "./types.ts";
 
-
 export const SideBar: FC<SideBarProps> = ({
   open,
   isAuth,
@@ -43,7 +42,6 @@ export const SideBar: FC<SideBarProps> = ({
       <List>
         <SideBarLink
           onNavigate={handleNavigate}
-          isAuth={isAuth}
           hasAdminRole={hasAdminRole}
           hasHunterRole={hasHunterRole}/>
       </List>

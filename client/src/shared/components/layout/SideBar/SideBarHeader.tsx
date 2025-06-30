@@ -11,7 +11,6 @@ export const SideBarHeader: FC<SideBarHeaderProps> = ({
   direction,
   currentUser,
 }) => {
-  console.log({currentUser})
   return (
     <HeaderContainer>
       <Typography variant="subtitle1" sx={{ml: 1}}>

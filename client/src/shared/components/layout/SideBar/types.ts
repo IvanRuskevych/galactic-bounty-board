@@ -22,3 +22,9 @@ export interface SideBarProps {
   handleNavigate: (path: string) => void,
   currentUser: User | null
 }
+
+export interface SideBarLinkProps {
+  hasAdminRole?: boolean;
+  hasHunterRole?: boolean;
+  onNavigate: (path: string) => void;
+}
