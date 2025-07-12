@@ -1,0 +1,14 @@
+export enum ENV_KEYS {
+	DATABASE_URL = "DATABASE_URL",
+	PORT = "PORT",
+	CLIENT_URL = "CLIENT_URL",
+	JWT_ACCESS_SECRET = "JWT_ACCESS_SECRET",
+	JWT_REFRESH_SECRET = "JWT_REFRESH_SECRET",
+}
+
+export const ENV_VALUE = {
+	PORT: Number(process.env.PORT) || 4000,
+	CLIENT_URL: process.env.CLIENT_URL || "",
+	DATABASE_URL: process.env.DATABASE_URL || "",
+	JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET || "",
+};

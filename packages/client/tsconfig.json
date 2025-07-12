@@ -1,0 +1,55 @@
+{
+    "compilerOptions" : {
+        // 🎯 Targeting & Module
+        "target"                           : "ES2022", // Цільова версія JS
+        "lib"                              : [ "DOM", "DOM.Iterable", "ES2022" ], // Включити DOM API + ES API
+        "module"                           : "ESNext", // Для Vite підходить ESNext
+        "moduleResolution"                 : "bundler", // Потрібно для Vite
+        "jsx"                              : "react-jsx", // Новий JSX трансформер React 17+
+
+        // 📤 Output settings
+        "outDir"                           : "./dist", // Куди компілювати
+        "sourceMap"                        : true, // Генерувати .map файли
+        "declaration"                      : true, // Генерувати .d.ts
+        "removeComments"                   : true, // Видалити коментарі
+        "tsBuildInfoFile"                  : "./.tsbuildinfo", // Кеш для incremental build
+
+        // 🧠 Строгість
+        "strict"                           : true, // Увімкнути сувору типізацію
+        "noUnusedLocals"                   : true,
+        "noUnusedParameters"               : true,
+        "noFallthroughCasesInSwitch"       : true,
+        "skipLibCheck"                     : true,
+        "forceConsistentCasingInFileNames" : true,
+        "noImplicitAny"                    : true,
+        "strictNullChecks"                 : true,
+
+        // 🌐 Module interop
+        "allowSyntheticDefaultImports"     : true, // Дозволити імпорти без default
+        "esModuleInterop"                  : true, // Додаткова сумісність
+
+        // ⚙️ Інше
+        "incremental"                      : true, // Інкрементальна компіляція
+        "useDefineForClassFields"          : true, // Підтримка поля класу як у JS
+        "types"                            : [ "vite/client" ], // Типи для Vite
+
+        // 🔗 Alias
+        "baseUrl"                          : ".",
+        "paths"                            : {
+            "~/*"          : [ "src/*" ],
+            "~apollo/*"    : [ "src/apollo/*" ],
+            "~assets/*"    : [ "src/assets/*" ],
+            "~generated/*" : [ "src/generated/*" ],
+            "~graphql/*"   : [ "src/graphql/*" ],
+            "~modules/*"   : [ "src/modules/*" ],
+            "~routes/*"    : [ "src/routes/*" ],
+            "~services/*"  : [ "src/services/*" ],
+            "~shared/*"    : [ "src/shared/*" ],
+            "~store/*"     : [ "src/store/*" ],
+            "~typings/*"   : [ "src/typings/*" ]
+        }
+    },
+    
+    "include"         : [ "src", "vite.config.ts", "codegen.ts" ],
+    "exclude"         : [ "node_modules", "dist", "**/*.spec.ts" ]
+}

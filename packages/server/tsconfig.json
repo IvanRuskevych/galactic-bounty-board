@@ -1,0 +1,38 @@
+{
+    "typeRoots"       : [ "./src/types", "./node_modules/@types" ],
+
+    "compilerOptions" : {
+        // 🔧 Module settings
+        "module"                       : "CommonJS",
+        "moduleResolution"             : "Node",
+        "target"                       : "ES2020",
+        "lib"                          : [ "ES2020" ],
+
+        // 📦 Output settings
+        "outDir"                       : "./dist",
+        "rootDir"                      : "./src",
+        "sourceMap"                    : true,
+        "declaration"                  : true,
+        "removeComments"               : true,
+
+        // 🔌 Interop & Imports
+        "allowSyntheticDefaultImports" : true,
+        "esModuleInterop"              : true,
+        "baseUrl"                      : "./",
+        "paths"                        : { "~/*" : [ "./src/*" ] },
+
+        // 🧠 Strictness & type checks
+        "strict"                       : true,
+        "noImplicitAny"                : true,
+        "strictPropertyInitialization" : false,
+        "skipLibCheck"                 : true,
+
+        // 🧪 Experimental & decorators
+        "emitDecoratorMetadata"        : true,
+        "experimentalDecorators"       : true
+    },
+
+    // 📁 File system
+    "include"         : [ "src/**/*", "codegen.ts" ],
+    "exclude"         : [ "dist", "node_modules" ]
+}
