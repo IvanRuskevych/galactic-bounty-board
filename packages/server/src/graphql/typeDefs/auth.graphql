@@ -1,0 +1,17 @@
+type AuthPayload {
+    user: User!
+}
+
+type SuccessResponse {
+    success: Boolean!
+}
+
+# -----------------------------
+# Mutations
+# -----------------------------
+extend type Mutation {
+    registerUser(email: String!, password: String!): AuthPayload!
+    loginUser(email: String!, password: String!): AuthPayload!
+    refreshAccessToken: SuccessResponse!
+    logoutUser: SuccessResponse!
+}

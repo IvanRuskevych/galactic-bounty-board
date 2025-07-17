@@ -1,51 +1,56 @@
-import { BountyStatus, Prisma, PrismaClient } from "@prisma/client";
+import { BountyStatus, Prisma } from "@prisma/client";
+import { prismaClient } from "~/prisma";
 
 export const bountyRepository = {
-	create: (prisma: PrismaClient, data: Prisma.BountyCreateInput) => prisma.bounty.create({ data }),
-
-	getById: (prisma: PrismaClient, id: string) => prisma.bounty.findUnique({ where: { id } }),
-
-	getAvailable: (prisma: PrismaClient) =>
-		prisma.bounty.findMany({
-			where: {
-				status: BountyStatus.POSTED,
+	create: (input: Prisma.BountyCreateInput) =>
+		prismaClient.bounty.create({
+			data: input,
+			include: {
+				createdBy: true,
 			},
 		}),
 
-	getByStatusAndUser: (prisma: PrismaClient, userId: string, status: BountyStatus) =>
-		prisma.bounty.findMany({
+	update: (bountyId: string, input: Prisma.BountyUpdateInput) =>
+		prismaClient.bounty.update({ where: { id: bountyId }, data: input }),
+
+	delete: (bountyId: string) => prismaClient.bounty.delete({ where: { id: bountyId } }),
+
+	findById: (bountyId: string) => prismaClient.bounty.findUnique({ where: { id: bountyId } }),
+
+	findManyWithStatus: (status: BountyStatus) =>
+		prismaClient.bounty.findMany({
+			where: { status },
+		}),
+
+	findManyByCreatorIdWithStatus: (userId: string, status: BountyStatus) =>
+		prismaClient.bounty.findMany({
 			where: {
 				createdById: userId,
 				status,
 			},
 		}),
 
-	getAcceptedByUser: (prisma: PrismaClient, userId: string) =>
-		prisma.bounty.findMany({
+	findManyByAcceptorId: (userId: string) =>
+		prismaClient.bounty.findMany({
 			where: {
 				acceptedById: userId,
 			},
 		}),
 
-	update: (prisma: PrismaClient, id: string, data: Prisma.BountyUpdateInput) =>
-		prisma.bounty.update({ where: { id }, data }),
-
-	accept: (prisma: PrismaClient, bountyId: string, userId: string) =>
-		prisma.bounty.update({
-			where: { id: bountyId },
-			data: {
-				acceptedById: userId,
-				status: BountyStatus.ACCEPTED,
-			},
-		}),
-
-	post: (prisma: PrismaClient, bountyId: string) =>
-		prisma.bounty.update({
+	post: (bountyId: string) =>
+		prismaClient.bounty.update({
 			where: { id: bountyId },
 			data: {
 				status: BountyStatus.POSTED,
 			},
 		}),
 
-	delete: (prisma: PrismaClient, id: string) => prisma.bounty.delete({ where: { id } }),
+	accept: (bountyId: string, userId: string) =>
+		prismaClient.bounty.update({
+			where: { id: bountyId },
+			data: {
+				acceptedById: userId,
+				status: BountyStatus.ACCEPTED,
+			},
+		}),
 };

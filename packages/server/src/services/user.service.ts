@@ -1,24 +1,25 @@
 import { Context } from "~/context";
+import { UserCreateInput, UserRole } from "~/graphql/generated/graphql";
 import { userRepository } from "~/repositories";
 import { requireAuth, requireRoleAdmin } from "~/utils";
 
 export const userService = {
-	getById: (id: string, ctx: Context) => {
-		return userRepository.getById(ctx.prisma, id);
-	},
-
-	create: (email: string, password: string, ctx: Context) => {
-		return userRepository.create(ctx.prisma, email, password);
-	},
-
-	getAllHunters: (ctx: Context) => {
-		requireAuth(ctx);
-		requireRoleAdmin(ctx);
-		return userRepository.getAllHunters(ctx.prisma);
+	createUser: (input: UserCreateInput) => {
+		return userRepository.create(input);
 	},
 
 	getCurrentUser: (ctx: Context) => {
+		const user = requireAuth(ctx);
+		return userRepository.findById(user.id);
+	},
+
+	getHunterByIdWithBounties: (userId: string) => {
+		return userRepository.findById(userId, { include: { bountiesCreated: true, bountiesAccepted: true } });
+	},
+
+	getAllHuntersWithAcceptedBounties: (ctx: Context) => {
 		requireAuth(ctx);
-		return userRepository.getById(ctx.prisma, ctx.currentUser!.id);
+		requireRoleAdmin(ctx);
+		return userRepository.findAll({ include: { bountiesAccepted: true }, where: { role: UserRole.Hunter } });
 	},
 };

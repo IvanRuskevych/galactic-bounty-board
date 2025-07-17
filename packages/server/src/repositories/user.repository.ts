@@ -1,25 +1,32 @@
-import { PrismaClient, UserRole } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
+import { prismaClient } from "~/prisma";
 
 export const userRepository = {
-	create: (prisma: PrismaClient, email: string, password: string) =>
-		prisma.user.create({
-			data: { email, password },
-		}),
-
-	getById: (prisma: PrismaClient, id: string) => prisma.user.findUniqueOrThrow({ where: { id } }),
-
-	getByEmail: (prisma: PrismaClient, email: string) => {
-		return prisma.user.findUnique({
-			where: { email },
-		});
+	create(data: Prisma.UserCreateInput, args?: Omit<Prisma.UserCreateArgs, "data">): Promise<User> {
+		return prismaClient.user.create({ data, ...args });
 	},
 
-	getAllHunters: (prisma: PrismaClient) => {
-		return prisma.user.findMany({ where: { role: UserRole.HUNTER } });
+	update(
+		userId: string,
+		data: Prisma.UserUpdateInput,
+		args?: Omit<Prisma.UserUpdateArgs, "data" | "where">,
+	): Promise<User> {
+		return prismaClient.user.update({ where: { id: userId }, data, ...args });
 	},
 
-	// update: (prisma: PrismaClient, id: string, data: Prisma.UserUpdateInput) =>
-	//     prisma.user.update({where: {id}, data}),
+	delete(userId: string): Promise<User> {
+		return prismaClient.user.delete({ where: { id: userId } });
+	},
 
-	// delete: (prisma: PrismaClient, id: string) => prisma.bounty.delete({where: {id}}),
+	findById(userId: string, args?: Omit<Prisma.UserFindUniqueArgs, "where">): Promise<User> {
+		return prismaClient.user.findUniqueOrThrow({ where: { id: userId }, ...args });
+	},
+
+	findByEmail(email: string, args?: Omit<Prisma.UserFindUniqueArgs, "where">) {
+		return prismaClient.user.findUnique({ where: { email: email }, ...args });
+	},
+
+	findAll(args?: Prisma.UserFindManyArgs) {
+		return prismaClient.user.findMany({ ...args });
+	},
 };
