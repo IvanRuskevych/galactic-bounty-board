@@ -3,6 +3,21 @@
 Galactic Bounty Board is a full-stack web application where users can create, manage, and accept bounties for characters
 from the Star Wars universe.
 
+---
+![public.png](docs/public.png)
+
+![admin_dash.png](docs/admin_dash.png)
+
+![hunter_dash.png](docs/hunter_dash.png)
+
+![form.png](docs/form.png)
+
+![create.png](docs/create.png)
+
+![edit.png](docs/edit.png)
+
+---
+
 This monorepo contains:
 
 - 🧠 **Backend** – GraphQL API with Node.js, PostgreSQL, Prisma
