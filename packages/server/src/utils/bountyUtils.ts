@@ -1,10 +1,9 @@
-import { Context } from "~/context";
 import { bountyRepository } from "~/repositories";
 import { BountyStatus } from "~/shared/const";
 import { ApiErrors } from "~/utils/ApiErrors";
 
-export async function getBountyOrFail(ctx: Context, bountyId: string) {
-	const bounty = await bountyRepository.getById(ctx.prisma, bountyId);
+export async function getBountyOrFail(bountyId: string) {
+	const bounty = await bountyRepository.findById(bountyId);
 	if (!bounty) throw ApiErrors.NotFound("Bounty not found");
 
 	return bounty;

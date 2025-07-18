@@ -14,7 +14,6 @@ export const NavigationBar = () => {
 
 	const { isAuth, logout, user } = useAuthStore();
 	const { currentUser, fetchCurrentUser } = useUserStore();
-
 	const hasAdminRole = user?.role === UserRoles.ADMIN;
 	const hasHunterRole = user?.role === UserRoles.HUNTER;
 

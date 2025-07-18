@@ -1,51 +1,85 @@
-import { BountyStatus, Prisma, PrismaClient } from "@prisma/client";
+import { Bounty, BountyStatus, Prisma } from "@prisma/client";
+import { prismaClient } from "~/prisma";
 
 export const bountyRepository = {
-	create: (prisma: PrismaClient, data: Prisma.BountyCreateInput) => prisma.bounty.create({ data }),
+	create(input: Prisma.BountyCreateInput, args?: Omit<Prisma.BountyCreateArgs, "data">): Promise<Bounty> {
+		return prismaClient.bounty.create({
+			data: input,
+			...args,
+		});
+	},
 
-	getById: (prisma: PrismaClient, id: string) => prisma.bounty.findUnique({ where: { id } }),
+	update(
+		bountyId: string,
+		input: Prisma.BountyUpdateInput,
+		args?: Omit<Prisma.BountyUpdateArgs, "where" | "data">,
+	): Promise<Bounty> {
+		return prismaClient.bounty.update({
+			where: { id: bountyId },
+			data: input,
+			...args,
+		});
+	},
 
-	getAvailable: (prisma: PrismaClient) =>
-		prisma.bounty.findMany({
-			where: {
-				status: BountyStatus.POSTED,
-			},
-		}),
+	delete(bountyId: string) {
+		return prismaClient.bounty.delete({ where: { id: bountyId } });
+	},
 
-	getByStatusAndUser: (prisma: PrismaClient, userId: string, status: BountyStatus) =>
-		prisma.bounty.findMany({
+	findById(bountyId: string, args?: Omit<Prisma.BountyFindUniqueArgs, "where">): Promise<Bounty> {
+		return prismaClient.bounty.findUniqueOrThrow({
+			where: { id: bountyId },
+			...args,
+		});
+	},
+
+	findManyWithStatus(status: BountyStatus, args?: Omit<Prisma.BountyFindUniqueArgs, "where">): Promise<Bounty[]> {
+		return prismaClient.bounty.findMany({
+			where: { status },
+			...args,
+		});
+	},
+
+	findManyByCreatorIdWithStatus(
+		userId: string,
+		status: BountyStatus,
+		args?: Omit<Prisma.BountyFindManyArgs, "where">,
+	): Promise<Bounty[]> {
+		return prismaClient.bounty.findMany({
 			where: {
 				createdById: userId,
 				status,
 			},
-		}),
+			...args,
+		});
+	},
 
-	getAcceptedByUser: (prisma: PrismaClient, userId: string) =>
-		prisma.bounty.findMany({
+	findManyByAcceptorId(userId: string, args?: Omit<Prisma.BountyFindManyArgs, "where">): Promise<Bounty[]> {
+		return prismaClient.bounty.findMany({
 			where: {
 				acceptedById: userId,
 			},
-		}),
+			...args,
+		});
+	},
 
-	update: (prisma: PrismaClient, id: string, data: Prisma.BountyUpdateInput) =>
-		prisma.bounty.update({ where: { id }, data }),
+	post(bountyId: string, args?: Omit<Prisma.BountyUpdateArgs, "where">): Promise<Bounty> {
+		return prismaClient.bounty.update({
+			where: { id: bountyId },
+			data: {
+				status: BountyStatus.POSTED,
+			},
+			...args,
+		});
+	},
 
-	accept: (prisma: PrismaClient, bountyId: string, userId: string) =>
-		prisma.bounty.update({
+	accept(bountyId: string, userId: string, args?: Omit<Prisma.BountyUpdateArgs, "where" | "data">): Promise<Bounty> {
+		return prismaClient.bounty.update({
 			where: { id: bountyId },
 			data: {
 				acceptedById: userId,
 				status: BountyStatus.ACCEPTED,
 			},
-		}),
-
-	post: (prisma: PrismaClient, bountyId: string) =>
-		prisma.bounty.update({
-			where: { id: bountyId },
-			data: {
-				status: BountyStatus.POSTED,
-			},
-		}),
-
-	delete: (prisma: PrismaClient, id: string) => prisma.bounty.delete({ where: { id } }),
+			...args,
+		});
+	},
 };

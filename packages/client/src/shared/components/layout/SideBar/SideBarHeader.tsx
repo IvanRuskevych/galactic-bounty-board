@@ -11,9 +11,7 @@ export const SideBarHeader: FC<SideBarHeaderProps> = ({ onClose, direction, curr
 			<Typography variant="subtitle1" sx={{ ml: 1 }}>
 				{currentUser?.email}
 			</Typography>
-			<IconButton onClick={onClose}>
-				{direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-			</IconButton>
+			<IconButton onClick={onClose}>{direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}</IconButton>
 		</HeaderContainer>
 	);
 };

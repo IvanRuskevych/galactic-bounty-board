@@ -1,9 +1,9 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { User as PrismaUser, Bounty as PrismaBounty } from '@prisma/client';
 import { Context } from '../../context';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
-export type InputMaybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -17,6 +17,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  DateTime: { input: any; output: any; }
 };
 
 export type AuthPayload = {
@@ -37,18 +38,27 @@ export type Bounty = {
   title: Scalars['String']['output'];
 };
 
+export type BountyCreateInput = {
+  description: Scalars['String']['input'];
+  planet: Scalars['String']['input'];
+  reward: Scalars['Int']['input'];
+  targetId: Scalars['Int']['input'];
+  title: Scalars['String']['input'];
+};
+
 export enum BountyStatus {
   Accepted = 'ACCEPTED',
   Created = 'CREATED',
   Posted = 'POSTED'
 }
 
-export type CreateBountyInput = {
-  description: Scalars['String']['input'];
-  planet: Scalars['String']['input'];
-  reward: Scalars['Int']['input'];
-  targetId: Scalars['Int']['input'];
-  title: Scalars['String']['input'];
+export type BountyUpdateInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  planet?: InputMaybe<Scalars['String']['input']>;
+  reward?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<BountyStatus>;
+  targetId?: InputMaybe<Scalars['Int']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CurrentUserBounties = {
@@ -60,15 +70,19 @@ export type CurrentUserBounties = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  _empty: Maybe<Scalars['String']['output']>;
   acceptBounty: Bounty;
   createBounty: Bounty;
+  createUser: User;
   deleteBounty: Bounty;
+  deleteUser: User;
   loginUser: AuthPayload;
-  logout: SuccessResponse;
+  logoutUser: SuccessResponse;
   postBounty: Bounty;
   refreshAccessToken: SuccessResponse;
   registerUser: AuthPayload;
   updateBounty: Bounty;
+  updateUser: User;
 };
 
 
@@ -78,12 +92,22 @@ export type MutationAcceptBountyArgs = {
 
 
 export type MutationCreateBountyArgs = {
-  data?: InputMaybe<CreateBountyInput>;
+  input?: InputMaybe<BountyCreateInput>;
+};
+
+
+export type MutationCreateUserArgs = {
+  input: UserCreateInput;
 };
 
 
 export type MutationDeleteBountyArgs = {
   bountyId: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteUserArgs = {
+  userId: Scalars['ID']['input'];
 };
 
 
@@ -106,29 +130,41 @@ export type MutationRegisterUserArgs = {
 
 export type MutationUpdateBountyArgs = {
   bountyId: Scalars['ID']['input'];
-  data?: InputMaybe<UpdateBountyInput>;
+  input?: InputMaybe<BountyUpdateInput>;
+};
+
+
+export type MutationUpdateUserArgs = {
+  input: UserUpdateInput;
+};
+
+export type OrderByInput = {
+  direction: SortDirection;
+  field: Scalars['String']['input'];
+};
+
+export type PaginationInput = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  allAvailableBounties: Array<Bounty>;
-  allCurrentUserBounties: CurrentUserBounties;
-  allHunters: Array<User>;
-  currentUser: Maybe<User>;
+  _empty: Maybe<Scalars['String']['output']>;
+  getAllHuntersWithAcceptedBounties: Array<User>;
+  getAvailableBounties: Array<Bounty>;
+  getCurrentUser: User;
+  getCurrentUserBounties: CurrentUserBounties;
 };
+
+export enum SortDirection {
+  Asc = 'asc',
+  Desc = 'desc'
+}
 
 export type SuccessResponse = {
   __typename?: 'SuccessResponse';
   success: Scalars['Boolean']['output'];
-};
-
-export type UpdateBountyInput = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  planet?: InputMaybe<Scalars['String']['input']>;
-  reward?: InputMaybe<Scalars['Int']['input']>;
-  status?: InputMaybe<BountyStatus>;
-  targetId?: InputMaybe<Scalars['Int']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type User = {
@@ -140,10 +176,20 @@ export type User = {
   role: UserRole;
 };
 
+export type UserCreateInput = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
 export enum UserRole {
   Admin = 'ADMIN',
   Hunter = 'HUNTER'
 }
+
+export type UserUpdateInput = {
+  email?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+};
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
@@ -220,18 +266,24 @@ export type ResolversTypes = ResolversObject<{
   AuthPayload: ResolverTypeWrapper<any>;
   Boolean: ResolverTypeWrapper<any>;
   Bounty: ResolverTypeWrapper<PrismaBounty>;
+  BountyCreateInput: ResolverTypeWrapper<any>;
   BountyStatus: ResolverTypeWrapper<any>;
-  CreateBountyInput: ResolverTypeWrapper<any>;
+  BountyUpdateInput: ResolverTypeWrapper<any>;
   CurrentUserBounties: ResolverTypeWrapper<any>;
+  DateTime: ResolverTypeWrapper<any>;
   ID: ResolverTypeWrapper<any>;
   Int: ResolverTypeWrapper<any>;
   Mutation: ResolverTypeWrapper<{}>;
+  OrderByInput: ResolverTypeWrapper<any>;
+  PaginationInput: ResolverTypeWrapper<any>;
   Query: ResolverTypeWrapper<{}>;
+  SortDirection: ResolverTypeWrapper<any>;
   String: ResolverTypeWrapper<any>;
   SuccessResponse: ResolverTypeWrapper<any>;
-  UpdateBountyInput: ResolverTypeWrapper<any>;
   User: ResolverTypeWrapper<PrismaUser>;
+  UserCreateInput: ResolverTypeWrapper<any>;
   UserRole: ResolverTypeWrapper<any>;
+  UserUpdateInput: ResolverTypeWrapper<any>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -239,16 +291,21 @@ export type ResolversParentTypes = ResolversObject<{
   AuthPayload: any;
   Boolean: any;
   Bounty: PrismaBounty;
-  CreateBountyInput: any;
+  BountyCreateInput: any;
+  BountyUpdateInput: any;
   CurrentUserBounties: any;
+  DateTime: any;
   ID: any;
   Int: any;
   Mutation: {};
+  OrderByInput: any;
+  PaginationInput: any;
   Query: {};
   String: any;
   SuccessResponse: any;
-  UpdateBountyInput: any;
   User: PrismaUser;
+  UserCreateInput: any;
+  UserUpdateInput: any;
 }>;
 
 export type AuthPayloadResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AuthPayload'] = ResolversParentTypes['AuthPayload']> = ResolversObject<{
@@ -276,23 +333,32 @@ export type CurrentUserBountiesResolvers<ContextType = Context, ParentType exten
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
+  name: 'DateTime';
+}
+
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   acceptBounty?: Resolver<ResolversTypes['Bounty'], ParentType, ContextType, RequireFields<MutationAcceptBountyArgs, 'bountyId'>>;
   createBounty?: Resolver<ResolversTypes['Bounty'], ParentType, ContextType, Partial<MutationCreateBountyArgs>>;
+  createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
   deleteBounty?: Resolver<ResolversTypes['Bounty'], ParentType, ContextType, RequireFields<MutationDeleteBountyArgs, 'bountyId'>>;
+  deleteUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'userId'>>;
   loginUser?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'email' | 'password'>>;
-  logout?: Resolver<ResolversTypes['SuccessResponse'], ParentType, ContextType>;
+  logoutUser?: Resolver<ResolversTypes['SuccessResponse'], ParentType, ContextType>;
   postBounty?: Resolver<ResolversTypes['Bounty'], ParentType, ContextType, RequireFields<MutationPostBountyArgs, 'bountyId'>>;
   refreshAccessToken?: Resolver<ResolversTypes['SuccessResponse'], ParentType, ContextType>;
   registerUser?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationRegisterUserArgs, 'email' | 'password'>>;
   updateBounty?: Resolver<ResolversTypes['Bounty'], ParentType, ContextType, RequireFields<MutationUpdateBountyArgs, 'bountyId'>>;
+  updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'input'>>;
 }>;
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  allAvailableBounties?: Resolver<Array<ResolversTypes['Bounty']>, ParentType, ContextType>;
-  allCurrentUserBounties?: Resolver<ResolversTypes['CurrentUserBounties'], ParentType, ContextType>;
-  allHunters?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
-  currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  getAllHuntersWithAcceptedBounties?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  getAvailableBounties?: Resolver<Array<ResolversTypes['Bounty']>, ParentType, ContextType>;
+  getCurrentUser?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  getCurrentUserBounties?: Resolver<ResolversTypes['CurrentUserBounties'], ParentType, ContextType>;
 }>;
 
 export type SuccessResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SuccessResponse'] = ResolversParentTypes['SuccessResponse']> = ResolversObject<{
@@ -313,6 +379,7 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   AuthPayload?: AuthPayloadResolvers<ContextType>;
   Bounty?: BountyResolvers<ContextType>;
   CurrentUserBounties?: CurrentUserBountiesResolvers<ContextType>;
+  DateTime?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SuccessResponse?: SuccessResponseResolvers<ContextType>;

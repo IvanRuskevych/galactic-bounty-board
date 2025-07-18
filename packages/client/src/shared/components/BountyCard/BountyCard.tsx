@@ -32,26 +32,10 @@ export const BountyCard = ({
 				case BountyStatus.CREATED:
 					return (
 						<>
-							{onEdit && (
-								<BountyCardActionButton
-									label={"Edit"}
-									color={"success"}
-									onClick={() => onEdit(bounty)}
-								/>
-							)}
-							{onPost && (
-								<BountyCardActionButton
-									label={"Post"}
-									color={"primary"}
-									onClick={() => onPost(bounty.id)}
-								/>
-							)}
+							{onEdit && <BountyCardActionButton label={"Edit"} color={"success"} onClick={() => onEdit(bounty)} />}
+							{onPost && <BountyCardActionButton label={"Post"} color={"primary"} onClick={() => onPost(bounty.id)} />}
 							{onDelete && (
-								<BountyCardActionButton
-									label="Delete"
-									color={"error"}
-									onClick={() => onDelete(bounty.id)}
-								/>
+								<BountyCardActionButton label="Delete" color={"error"} onClick={() => onDelete(bounty.id)} />
 							)}
 						</>
 					);
@@ -59,19 +43,9 @@ export const BountyCard = ({
 				case BountyStatus.POSTED:
 					return (
 						<>
-							{onEdit && (
-								<BountyCardActionButton
-									label={"Edit"}
-									color={"success"}
-									onClick={() => onEdit(bounty)}
-								/>
-							)}
+							{onEdit && <BountyCardActionButton label={"Edit"} color={"success"} onClick={() => onEdit(bounty)} />}
 							{onDelete && (
-								<BountyCardActionButton
-									label="Delete"
-									color={"error"}
-									onClick={() => onDelete(bounty.id)}
-								/>
+								<BountyCardActionButton label="Delete" color={"error"} onClick={() => onDelete(bounty.id)} />
 							)}
 						</>
 					);
@@ -84,13 +58,7 @@ export const BountyCard = ({
 			if (bounty.status === BountyStatus.POSTED) {
 				return (
 					<>
-						{onAccept && (
-							<BountyCardActionButton
-								label="Accept"
-								color="success"
-								onClick={() => onAccept(bounty.id)}
-							/>
-						)}
+						{onAccept && <BountyCardActionButton label="Accept" color="success" onClick={() => onAccept(bounty.id)} />}
 					</>
 				);
 			}

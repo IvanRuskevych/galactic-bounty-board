@@ -30,21 +30,10 @@ export const PublicDashboard = () => {
 			<Typography variant="h4" sx={{ p: 1 }}>
 				Available Bounties
 			</Typography>
-			<InfiniteScroll
-				dataLength={items.length}
-				next={loadMore}
-				hasMore={hasMore}
-				loader={""}
-				scrollThreshold={0.9}
-			>
+			<InfiniteScroll dataLength={items.length} next={loadMore} hasMore={hasMore} loader={""} scrollThreshold={0.9}>
 				<BountyList bounties={sortedBounties} onAccept={handleAccept} context={contextPage.PUBLIC} />
 			</InfiniteScroll>
-			<EmptyState
-				empty={bounties.length === 0}
-				emptyMessage={"No bounties found"}
-				loading={loading}
-				error={error}
-			/>
+			<EmptyState empty={!bounties?.length} emptyMessage={"No bounties found"} loading={loading} error={error} />
 		</Container>
 	);
 };

@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_AVAILABLE_BOUNTIES = gql`
-	query AllAvailableBounties {
-		allAvailableBounties {
+	query Query {
+		getAvailableBounties {
 			title
 			targetId
 			status
@@ -23,8 +23,8 @@ export const GET_AVAILABLE_BOUNTIES = gql`
 `;
 
 export const GET_CURRENT_USER_BOUNTIES = gql`
-	query GetCurrentUserBounties {
-		allCurrentUserBounties {
+	query Query {
+		getCurrentUserBounties {
 			posted {
 				id
 				targetId

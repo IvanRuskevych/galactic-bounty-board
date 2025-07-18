@@ -27,9 +27,10 @@ export const authService = {
 		const { email, password } = validateInput(AuthSchema, args);
 		const normalizedEmail = normalizeEmail(email);
 
-		await ensureUserDoesNotExist(normalizedEmail, ctx);
+		await ensureUserDoesNotExist(normalizedEmail);
 		const hashedPassword = await hashPassword(password);
-		const user = await userService.create(normalizedEmail, hashedPassword, ctx);
+		const data = { email: normalizedEmail, password: hashedPassword };
+		const user = await userService.createUser(data);
 
 		const { accessToken, refreshToken } = generateTokens(user.id);
 		setAuthCookies(accessToken, refreshToken, ctx);
@@ -41,7 +42,7 @@ export const authService = {
 		const { email, password } = validateInput(AuthSchema, args);
 		const normalizedEmail = normalizeEmail(email);
 
-		const user = await ensureUserExists(normalizedEmail, ctx);
+		const user = await ensureUserExists(normalizedEmail);
 		await chackValidPassword(password, user.password);
 
 		const { accessToken, refreshToken } = generateTokens(user.id);

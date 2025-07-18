@@ -33,6 +33,6 @@
     },
 
     // 📁 File system
-    "include"         : [ "src/**/*", "codegen.ts" ],
+    "include"         : [ "src/**/*" ],
     "exclude"         : [ "dist", "node_modules" ]
 }

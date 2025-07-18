@@ -1,6 +1,7 @@
 export * from "./ApiErrors";
 export * from "./authUtils";
 export * from "./bountyUtils";
+export * from "./dbOptions";
 export * from "./formatErrorsUtils";
 export * from "./graphqlError";
 export * from "./normalize";
