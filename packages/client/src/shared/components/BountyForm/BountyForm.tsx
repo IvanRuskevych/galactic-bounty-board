@@ -1,5 +1,5 @@
 import { Box, MenuItem, TextField } from "@mui/material";
-import { type FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useBountyStore, useStarWarsStore } from "~/store";
 import { Bounty } from "~graphql/generated/graphql";
 
@@ -12,17 +12,21 @@ export const BountyForm = ({
 }) => {
 	const isEdit = Boolean(initialValues);
 
-	const [targetId, setTargetId] = useState(initialValues?.targetId || 0);
+	// const [targetId, setTargetId] = useState(initialValues?.targetId || 0);
+	const [targetId, setTargetId] = useState<number | string>(initialValues?.targetId ?? "");
 	const [title, setTitle] = useState(initialValues?.title || "");
 	const [planet, setPlanet] = useState(initialValues?.planet || "");
 	const [reward, setReward] = useState(initialValues?.reward || 0);
 	const [description, setDescription] = useState(initialValues?.description || "");
 
 	const { characters } = useStarWarsStore();
-	const { createBounty, updateBounty, fieldErrors } = useBountyStore();
+	const { createBounty, updateBounty, resetErrors, fieldErrors } = useBountyStore();
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
+
+		resetErrors();
+
 		const data = {
 			title,
 			description,
@@ -31,11 +35,15 @@ export const BountyForm = ({
 			targetId,
 		};
 
+		let result;
 		if (isEdit && initialValues?.id) {
-			updateBounty(initialValues.id, data);
+			result = await updateBounty(initialValues.id, data);
 		} else {
-			createBounty(data);
+			result = await createBounty(data);
 		}
+
+		if (!result.success) return;
+
 		onSubmitSuccess?.();
 	};
 

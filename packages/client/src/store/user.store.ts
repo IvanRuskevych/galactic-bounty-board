@@ -1,13 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { UserServices } from "~/services";
+import { userServices } from "~/services";
 import { handleApolloError } from "~/shared/utils";
 import { UserStore } from "~/typings";
+import { User } from "~graphql/generated/graphql";
 
 export const useUserStore = create<UserStore>()(
 	persist(
 		(set) => ({
-			users: [],
+			users: [] as User[],
 			currentUser: null,
 			loading: false,
 			error: null,
@@ -16,8 +17,8 @@ export const useUserStore = create<UserStore>()(
 			fetchAllUsersWithAcceptedBounties: async () => {
 				set({ loading: true, error: null });
 				try {
-					const { data } = await UserServices.getAllHuntersWithAcceptedBounties();
-					set({ users: data.allHunters });
+					const { data } = await userServices.getAllHuntersWithAcceptedBounties();
+					set({ users: data.getAllHuntersWithAcceptedBounties });
 				} catch (err) {
 					const { fieldErrors, error } = handleApolloError(err);
 					set({ fieldErrors, error });
@@ -30,8 +31,8 @@ export const useUserStore = create<UserStore>()(
 			fetchCurrentUser: async () => {
 				set({ loading: true, error: null });
 				try {
-					const { data } = await UserServices.getCurrentUser();
-					set({ currentUser: data?.currentUser || null });
+					const { data } = await userServices.getCurrentUser();
+					set({ currentUser: data?.getCurrentUser || null });
 				} catch (err) {
 					const { fieldErrors, error } = handleApolloError(err);
 					set({ fieldErrors, error });

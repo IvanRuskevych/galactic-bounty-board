@@ -10,6 +10,7 @@ export const userService = {
 
 	getCurrentUser: (ctx: Context) => {
 		const user = requireAuth(ctx);
+		console.log("BE getCurrentUser user", user);
 		return userRepository.findById(user.id);
 	},
 
@@ -20,6 +21,15 @@ export const userService = {
 	getAllHuntersWithAcceptedBounties: (ctx: Context) => {
 		requireAuth(ctx);
 		requireRoleAdmin(ctx);
-		return userRepository.findAll({ include: { bountiesAccepted: true }, where: { role: UserRole.Hunter } });
+		return userRepository.findAll({
+			where: { role: UserRole.Hunter },
+			include: {
+				bountiesAccepted: {
+					include: {
+						createdBy: true,
+					},
+				},
+			},
+		});
 	},
 };

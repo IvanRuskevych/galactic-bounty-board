@@ -24,10 +24,13 @@ export const bountyService = {
 		requireAuth(ctx);
 		const input = validateInput(CreateBountySchema, args.input);
 
-		return bountyRepository.create({
-			...input,
-			createdBy: { connect: { id: ctx.currentUser?.id } },
-		});
+		return bountyRepository.create(
+			{
+				...input,
+				createdBy: { connect: { id: ctx.currentUser?.id } },
+			},
+			{ include: { createdBy: true } },
+		);
 	},
 
 	updateBounty: async (args: MutationUpdateBountyArgs, ctx: Context) => {
@@ -42,7 +45,7 @@ export const bountyService = {
 
 		const input = validateInput(UpdateBountySchema, args.input);
 
-		return bountyRepository.update(args.bountyId, input);
+		return bountyRepository.update(args.bountyId, input, { include: { createdBy: true } });
 	},
 
 	deleteBounty: async (args: MutationDeleteBountyArgs, ctx: Context) => {
@@ -58,7 +61,8 @@ export const bountyService = {
 		return bountyRepository.delete(args.bountyId);
 	},
 
-	getAvailableBounties: () => bountyRepository.findManyWithStatus(BountyStatus.POSTED),
+	getAvailableBounties: () =>
+		bountyRepository.findManyWithStatus(BountyStatus.POSTED, { include: { createdBy: true, acceptedBy: true } }),
 
 	postBounty: async (args: { bountyId: string }, ctx: Context) => {
 		const user = requireAuth(ctx);
@@ -85,9 +89,15 @@ export const bountyService = {
 	getCurrentUserBounties: async (ctx: Context) => {
 		const user = requireAuth(ctx);
 
-		const created = await bountyRepository.findManyByCreatorIdWithStatus(user.id, BountyStatus.CREATED);
-		const posted = await bountyRepository.findManyByCreatorIdWithStatus(user.id, BountyStatus.POSTED);
-		const accepted = await bountyRepository.findManyByCreatorIdWithStatus(user.id, BountyStatus.ACCEPTED);
+		const created = await bountyRepository.findManyByCreatorIdWithStatus(user.id, BountyStatus.CREATED, {
+			include: { createdBy: true },
+		});
+		const posted = await bountyRepository.findManyByCreatorIdWithStatus(user.id, BountyStatus.POSTED, {
+			include: { createdBy: true },
+		});
+		const accepted = await bountyRepository.findManyByAcceptorId(user.id, {
+			include: { createdBy: true },
+		});
 
 		return { created, accepted, posted };
 	},

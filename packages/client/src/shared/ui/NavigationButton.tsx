@@ -9,13 +9,7 @@ interface NavigationButtonProps {
 
 export const NavigationButton: FC<NavigationButtonProps> = ({ to, label, ...props }) => {
 	return (
-		<Button
-			color="inherit"
-			component={RouterLink}
-			to={to}
-			sx={{ textTransform: "none", minWidth: "auto" }}
-			{...props}
-		>
+		<Button color="inherit" component={RouterLink} to={to} sx={{ textTransform: "none", minWidth: "auto" }} {...props}>
 			{label}
 		</Button>
 	);

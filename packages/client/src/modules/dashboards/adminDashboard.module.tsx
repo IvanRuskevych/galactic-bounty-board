@@ -28,9 +28,7 @@ export const AdminDashboard = () => {
 						<AccordionDetails>
 							<Box display="flex" flexWrap="wrap" gap={2}>
 								{user.bountiesAccepted?.length > 0 ? (
-									user.bountiesAccepted?.map((bounty: Bounty) => (
-										<BountyCard key={bounty.id} bounty={bounty} />
-									))
+									user.bountiesAccepted?.map((bounty: Bounty) => <BountyCard key={bounty.id} bounty={bounty} />)
 								) : (
 									<Typography>No accepted bounties</Typography>
 								)}
@@ -40,7 +38,12 @@ export const AdminDashboard = () => {
 				);
 			})}
 
-			<EmptyState empty={users.length === 0} emptyMessage={"No users found"} loading={loading} error={error} />
+			<EmptyState
+				empty={Array.isArray(users) && users.length === 0}
+				emptyMessage={"No users found"}
+				loading={loading}
+				error={error}
+			/>
 		</Container>
 	);
 };
