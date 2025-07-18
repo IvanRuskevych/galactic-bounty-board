@@ -1,0 +1,65 @@
+# -----------------------------
+# Bounty Schema
+# -----------------------------
+enum BountyStatus {
+    CREATED
+    POSTED
+    ACCEPTED
+}
+
+type Bounty {
+    id: ID!
+    title: String!
+    description: String!
+    targetId: Int!
+    planet: String!
+    reward: Int!
+    createdBy: User!
+    acceptedBy: User
+    status: BountyStatus!
+}
+
+type CurrentUserBounties {
+    created: [Bounty!]!
+    posted: [Bounty!]!
+    accepted: [Bounty!]!
+}
+
+# -----------------------------
+# Input Types
+# -----------------------------
+input BountyCreateInput {
+    title: String!
+    description: String!
+    targetId: Int!
+    planet: String!
+    reward: Int!
+}
+
+input BountyUpdateInput {
+    title: String
+    description: String
+    targetId: Int
+    planet: String
+    reward: Int
+    status: BountyStatus
+}
+
+# -----------------------------
+# Queries
+# -----------------------------
+extend type Query {
+    getAvailableBounties: [Bounty!]!
+    getCurrentUserBounties: CurrentUserBounties!
+}
+
+# -----------------------------
+# Mutations
+# -----------------------------
+extend type Mutation {
+    createBounty(input: BountyCreateInput): Bounty!
+    updateBounty(bountyId: ID!, input: BountyUpdateInput): Bounty!
+    deleteBounty(bountyId: ID!): Bounty!
+    postBounty(bountyId: ID!): Bounty!
+    acceptBounty(bountyId: ID!): Bounty!
+}

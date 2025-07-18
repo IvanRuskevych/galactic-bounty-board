@@ -12,7 +12,7 @@
         "sourceMap"                        : true, // Генерувати .map файли
         "declaration"                      : true, // Генерувати .d.ts
         "removeComments"                   : true, // Видалити коментарі
-        "tsBuildInfoFile"                  : "./.tsbuildinfo", // Кеш для incremental build
+        // "tsBuildInfoFile"                  : "./.tsbuildinfo", // Кеш для incremental build
 
         // 🧠 Строгість
         "strict"                           : true, // Увімкнути сувору типізацію
@@ -49,7 +49,7 @@
             "~typings/*"   : [ "src/typings/*" ]
         }
     },
-    
+
     "include"         : [ "src", "vite.config.ts", "codegen.ts" ],
     "exclude"         : [ "node_modules", "dist", "**/*.spec.ts" ]
 }

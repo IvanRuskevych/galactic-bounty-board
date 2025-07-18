@@ -4,10 +4,14 @@ import { ApiErrors } from "~/utils/ApiErrors";
 
 export function requireAuth(ctx: Context) {
 	if (!ctx.currentUser) throw ApiErrors.Unauthorized("Not authenticated");
+	return ctx.currentUser;
 }
 
 export function requireRoleAdmin(ctx: Context) {
-	if (ctx.currentUser?.role !== "ADMIN") throw ApiErrors.Unauthorized("Not authorized");
+	if (ctx.currentUser?.role !== "ADMIN")
+		throw ApiErrors.Unauthorized(
+			`Access denied: user role ${ctx.currentUser?.role ?? "undefined"} is not authorized to perform this action. Admin role required.`,
+		);
 }
 
 export function requireOwnership(userId: string, ownerId: string) {
@@ -47,13 +51,13 @@ export function clearAuthCookies(ctx: Context) {
 	ctx.res.clearCookie("refreshToken");
 }
 
-export async function ensureUserDoesNotExist(email: string, ctx: Context) {
-	const user = await userRepository.getByEmail(ctx.prisma, email);
+export async function ensureUserDoesNotExist(email: string) {
+	const user = await userRepository.findByEmail(email);
 	if (user) throw ApiErrors.Conflict("Email already exists");
 }
 
-export async function ensureUserExists(email: string, ctx: Context) {
-	const user = await userRepository.getByEmail(ctx.prisma, email);
+export async function ensureUserExists(email: string) {
+	const user = await userRepository.findByEmail(email);
 	if (!user) throw ApiErrors.NotFound("No user found.");
 	return user;
 }

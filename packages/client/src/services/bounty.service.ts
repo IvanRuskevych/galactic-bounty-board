@@ -3,7 +3,7 @@ import { ACCEPT_BOUNTY, CREATE_BOUNTY, DELETE_BOUNTY, POST_BOUNTY, UPDATE_BOUNTY
 import { GET_AVAILABLE_BOUNTIES, GET_CURRENT_USER_BOUNTIES } from "~/graphql/queries";
 import { BountyFormValues } from "~/typings";
 
-export const BountyService = {
+export const bountyService = {
 	getPublic: () => {
 		return apolloClient.query({
 			query: GET_AVAILABLE_BOUNTIES,
@@ -21,14 +21,15 @@ export const BountyService = {
 	create: (data: BountyFormValues) => {
 		return apolloClient.mutate({
 			mutation: CREATE_BOUNTY,
-			variables: { data },
+			variables: { input: data },
 		});
 	},
 
 	update: (bountyId: string, data: BountyFormValues) => {
+		console.log("update data:", data);
 		return apolloClient.mutate({
 			mutation: UPDATE_BOUNTY,
-			variables: { bountyId, data },
+			variables: { bountyId, input: data },
 		});
 	},
 

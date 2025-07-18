@@ -1,9 +1,3 @@
-// This is your Prisma graphql file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
@@ -19,8 +13,8 @@ model User {
   email            String   @unique
   password         String
   role             UserRole @default(HUNTER)
-  bountiesCreated  Bounty[] @relation("CreatedBounties")
   bountiesAccepted Bounty[] @relation("AcceptedBounties")
+  bountiesCreated  Bounty[] @relation("CreatedBounties")
 }
 
 model Bounty {
@@ -31,10 +25,10 @@ model Bounty {
   planet       String
   reward       Int
   status       BountyStatus @default(CREATED)
-  createdBy    User         @relation("CreatedBounties", fields: [createdById], references: [id])
-  acceptedBy   User?        @relation("AcceptedBounties", fields: [acceptedById], references: [id])
   createdById  String
   acceptedById String?
+  acceptedBy   User?        @relation("AcceptedBounties", fields: [acceptedById], references: [id])
+  createdBy    User         @relation("CreatedBounties", fields: [createdById], references: [id])
 }
 
 enum BountyStatus {

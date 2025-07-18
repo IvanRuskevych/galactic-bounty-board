@@ -42,11 +42,7 @@ export const SideBar: FC<SideBarProps> = ({
 			<Divider />
 
 			<List>
-				<AuthActions
-					isAuth={isAuth}
-					onLogout={handleLogout}
-					onLogin={() => handleNavigate(ROUTER_KEYS.LOGIN)}
-				/>
+				<AuthActions isAuth={isAuth} onLogout={handleLogout} onLogin={() => handleNavigate(ROUTER_KEYS.LOGIN)} />
 			</List>
 		</Drawer>
 	);

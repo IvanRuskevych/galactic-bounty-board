@@ -15,8 +15,8 @@ export interface BountyStore {
 	fetchCurrentUserBounties: () => void;
 	reset: () => void;
 	resetErrors: () => void;
-	createBounty: (data: BountyFormValues) => void;
-	updateBounty: (bountyId: string, data: BountyFormValues) => void;
+	createBounty: (data: BountyFormValues) => Promise<{ success: boolean }>;
+	updateBounty: (bountyId: string, data: BountyFormValues) => Promise<{ success: boolean }>;
 	deleteBounty: (bountyId: string) => void;
 	postBounty: (bountyId: string) => void;
 	acceptBounty: (bountyId: string) => void;
@@ -52,5 +52,6 @@ export interface BountyFormValues {
 	description: string;
 	planet: string;
 	reward: number;
-	targetId: number;
+	targetId: number | string;
+	// targetId: number;
 }

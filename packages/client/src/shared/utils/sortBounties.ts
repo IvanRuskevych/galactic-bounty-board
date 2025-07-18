@@ -3,7 +3,15 @@ import { Bounty } from "~graphql/generated/graphql";
 type SortField = "title" | "reward";
 type SortOrder = "asc" | "desc";
 
-export function sortBounties(bounties: Bounty[], field: SortField = "title", order: SortOrder = "asc"): Bounty[] {
+export function sortBounties(
+	bounties: Bounty[] | null | undefined,
+	field: SortField = "title",
+	order: SortOrder = "asc",
+): Bounty[] {
+	if (!Array.isArray(bounties)) {
+		return [];
+	}
+
 	const sorted = [...bounties].sort((a, b) => {
 		const aValue = a[field];
 		const bValue = b[field];

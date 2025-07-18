@@ -1,0 +1,24 @@
+scalar DateTime
+
+enum SortDirection {
+    asc
+    desc
+}
+
+input PaginationInput {
+    skip: Int
+    take: Int
+}
+
+input OrderByInput {
+    field: String!
+    direction: SortDirection!
+}
+
+type Query {
+    _empty: String
+}
+
+type Mutation {
+    _empty: String
+}

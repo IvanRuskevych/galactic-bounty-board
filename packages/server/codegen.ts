@@ -2,13 +2,17 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: "src/graphql/typeDefs/index.ts", // <-- GraphQL typeDefs (SDL)
+  schema: "src/graphql/typeDefs/**/*.graphql", // <-- GraphQL typeDefs (SDL)
   generates: {
     "src/graphql/generated/graphql.ts": {
-      plugins: ["typescript", "typescript-resolvers", "typescript-document-nodes"],
+      plugins: [
+        "typescript",
+        "typescript-resolvers",
+        "typescript-document-nodes",
+      ],
       config: {
-        useIndexSignature: true,
         contextType: "../../context#Context",
+        useIndexSignature: true,
         defaultMapper: "any",
         mappers: {
           User: "@prisma/client#User as PrismaUser",
@@ -18,7 +22,7 @@ const config: CodegenConfig = {
           field: true,
           inputValue: false,
         },
-        maybeValue: "T | null", // Якщо плануєш писати тестові резолвери
+        // maybeValue: "T | null", // for resolver tests
       },
     },
   },

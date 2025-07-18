@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { BountyService } from "~/services";
+import { bountyService } from "~/services";
 import { handleApolloError, notifySuccess } from "~/shared/utils";
 import { BountyFormValues, BountyStore } from "~/typings";
 
@@ -18,8 +18,8 @@ export const useBountyStore = create<BountyStore>()(
 			fetchPublicBounties: async () => {
 				set({ loading: true, error: null });
 				try {
-					const { data } = await BountyService.getPublic();
-					set({ bounties: data.allAvailableBounties });
+					const { data } = await bountyService.getPublic();
+					set({ bounties: data.getAvailableBounties });
 				} catch (err) {
 					const { fieldErrors, error } = handleApolloError(err);
 					set({ fieldErrors, error });
@@ -32,11 +32,11 @@ export const useBountyStore = create<BountyStore>()(
 			fetchCurrentUserBounties: async () => {
 				set({ loading: true, error: null });
 				try {
-					const { data } = await BountyService.getCurrentUserBounties();
+					const { data } = await bountyService.getCurrentUserBounties();
 					set({
-						created: data.allCurrentUserBounties.created,
-						posted: data.allCurrentUserBounties.posted,
-						accepted: data.allCurrentUserBounties.accepted,
+						created: data.getCurrentUserBounties.created,
+						posted: data.getCurrentUserBounties.posted,
+						accepted: data.getCurrentUserBounties.accepted,
 					});
 				} catch (err) {
 					const { fieldErrors, error } = handleApolloError(err);
@@ -51,13 +51,15 @@ export const useBountyStore = create<BountyStore>()(
 				set({ loading: true, error: null });
 
 				try {
-					await BountyService.create(data);
+					await bountyService.create(data);
 					get().fetchCurrentUserBounties();
 					notifySuccess("Bounty created successfully. 📝");
+					return { success: true };
 				} catch (err) {
 					const { fieldErrors, error } = handleApolloError(err);
 					set({ fieldErrors, error });
-					throw err;
+					return { success: false };
+					// throw err;
 				} finally {
 					set({ loading: false });
 				}
@@ -66,13 +68,20 @@ export const useBountyStore = create<BountyStore>()(
 			updateBounty: async (bountyId: string, data: BountyFormValues) => {
 				set({ loading: true, error: null });
 				try {
-					await BountyService.update(bountyId, data);
+					await bountyService.update(bountyId, data);
 					get().fetchCurrentUserBounties();
 					notifySuccess("Bounty updated successfully. ✏️");
+					return { success: true };
 				} catch (err) {
+					// console.log("RAW ERROR", err);
+					// set({ fieldErrors: { title: ["Test validation error"] } });
+					// return { success: false };
+					console.log("RAW ERROR:", err);
 					const { fieldErrors, error } = handleApolloError(err);
+					console.log("Parsed error:", { fieldErrors }, { error });
 					set({ fieldErrors, error });
-					throw err;
+					return { success: false };
+					// // throw err;
 				} finally {
 					set({ loading: false });
 				}
@@ -81,7 +90,7 @@ export const useBountyStore = create<BountyStore>()(
 			deleteBounty: async (bountyId: string) => {
 				set({ loading: true, error: null });
 				try {
-					await BountyService.delete(bountyId);
+					await bountyService.delete(bountyId);
 					get().fetchCurrentUserBounties();
 					notifySuccess("Bounty deleted 🗑️");
 				} catch (err) {
@@ -96,7 +105,7 @@ export const useBountyStore = create<BountyStore>()(
 			postBounty: async (bountyId: string) => {
 				set({ loading: true, error: null });
 				try {
-					await BountyService.post(bountyId);
+					await bountyService.post(bountyId);
 					get().fetchCurrentUserBounties();
 					notifySuccess("Bounty posted successfully.");
 				} catch (err) {
@@ -111,7 +120,7 @@ export const useBountyStore = create<BountyStore>()(
 			acceptBounty: async (bountyId: string) => {
 				set({ loading: true, error: null });
 				try {
-					await BountyService.accept(bountyId);
+					await bountyService.accept(bountyId);
 					get().fetchPublicBounties();
 					get().fetchCurrentUserBounties();
 					notifySuccess("Bounty accepted successfully.");

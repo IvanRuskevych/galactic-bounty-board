@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_BOUNTY = gql`
-	mutation CreateBounty($data: CreateBountyInput) {
-		createBounty(data: $data) {
+	mutation Mutation($input: BountyCreateInput) {
+		createBounty(input: $input) {
 			title
 			targetId
 			status
@@ -19,8 +19,8 @@ export const CREATE_BOUNTY = gql`
 `;
 
 export const UPDATE_BOUNTY = gql`
-	mutation UpdateBounty($bountyId: ID!, $data: UpdateBountyInput) {
-		updateBounty(bountyId: $bountyId, data: $data) {
+	mutation Mutation($bountyId: ID!, $input: BountyUpdateInput) {
+		updateBounty(bountyId: $bountyId, input: $input) {
 			title
 			targetId
 			status
@@ -37,7 +37,7 @@ export const UPDATE_BOUNTY = gql`
 `;
 
 export const DELETE_BOUNTY = gql`
-	mutation DeleteBounty($bountyId: ID!) {
+	mutation Mutation($bountyId: ID!) {
 		deleteBounty(bountyId: $bountyId) {
 			title
 		}
@@ -45,7 +45,7 @@ export const DELETE_BOUNTY = gql`
 `;
 
 export const POST_BOUNTY = gql`
-	mutation PostBounty($bountyId: ID!) {
+	mutation Mutation($bountyId: ID!) {
 		postBounty(bountyId: $bountyId) {
 			title
 		}
@@ -53,7 +53,7 @@ export const POST_BOUNTY = gql`
 `;
 
 export const ACCEPT_BOUNTY = gql`
-	mutation AcceptBounty($bountyId: ID!) {
+	mutation Mutation($bountyId: ID!) {
 		acceptBounty(bountyId: $bountyId) {
 			title
 		}

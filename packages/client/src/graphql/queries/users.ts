@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_ALL_HUNTERS_WITH_ACCEPTED_BOUNTIES = gql`
-	query GetAllHuntersWithAcceptedBounties {
-		allHunters {
+	query Query {
+		getAllHuntersWithAcceptedBounties {
 			role
 			id
 			email
@@ -24,8 +24,8 @@ export const GET_ALL_HUNTERS_WITH_ACCEPTED_BOUNTIES = gql`
 `;
 
 export const GET_CURRENT_USER = gql`
-	query GetCurrentUser {
-		currentUser {
+	query Query {
+		getCurrentUser {
 			email
 			role
 		}

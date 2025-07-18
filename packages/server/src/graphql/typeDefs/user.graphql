@@ -1,0 +1,46 @@
+# -----------------------------
+# User Schema
+# -----------------------------
+enum UserRole {
+    ADMIN
+    HUNTER
+}
+
+type User {
+    id: ID!
+    email: String!
+    role: UserRole!
+    bountiesCreated: [Bounty!]!
+    bountiesAccepted: [Bounty!]!
+}
+
+# -----------------------------
+# Input Types
+# -----------------------------
+
+input UserCreateInput {
+    email: String!
+    password: String!
+}
+
+input UserUpdateInput {
+    email: String
+    password: String
+}
+
+# -----------------------------
+# Queries
+# -----------------------------
+extend type Query {
+    getCurrentUser: User!
+    getAllHuntersWithAcceptedBounties: [User!]!
+}
+
+# -----------------------------
+# Mutations
+# -----------------------------
+extend type Mutation {
+    createUser(input: UserCreateInput!): User!
+    updateUser(input: UserUpdateInput!): User!
+    deleteUser(userId: ID!): User!
+}

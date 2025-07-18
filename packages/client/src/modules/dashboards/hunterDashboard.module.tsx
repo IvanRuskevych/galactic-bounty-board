@@ -28,8 +28,8 @@ export const HunterDashboard = () => {
 	const [search, setSearch] = useState("");
 	const [dialogOpen, setDialogOpen] = useState(false);
 
-	const allBounties = [...created, ...posted, ...accepted];
-
+	// const allBounties = [...created, ...posted, ...accepted];
+	const allBounties = useMemo(() => [...created, ...posted, ...accepted], [created, posted, accepted]);
 	const filteredBounties = useMemo(() => {
 		return filterBounties(allBounties, filter, search);
 	}, [allBounties, filter, search]);
@@ -89,11 +89,7 @@ export const HunterDashboard = () => {
 
 					<Box display="flex" gap={1} flexWrap="wrap" justifyContent={{ xs: "center", sm: "flex-start" }}>
 						{BOUNTY_FILTERS.map((type) => (
-							<Button
-								key={type}
-								variant={filter === type ? "contained" : "outlined"}
-								onClick={() => setFilter(type)}
-							>
+							<Button key={type} variant={filter === type ? "contained" : "outlined"} onClick={() => setFilter(type)}>
 								{type}
 							</Button>
 						))}
@@ -112,7 +108,7 @@ export const HunterDashboard = () => {
 				</InfiniteScroll>
 
 				<EmptyState
-					empty={filteredBounties.length === 0}
+					empty={Array.isArray(filteredBounties) && filteredBounties.length === 0}
 					emptyMessage={"No bounties found"}
 					loading={loading}
 					error={error}
@@ -123,12 +119,12 @@ export const HunterDashboard = () => {
 				open={dialogOpen}
 				onClose={() => {
 					setDialogOpen(false);
-					setEditingBounty(null);
 					resetErrors();
+					setEditingBounty(null);
 				}}
 				onSuccess={() => {
-					fetchCurrentUserBounties();
 					setDialogOpen(false);
+					fetchCurrentUserBounties();
 					setEditingBounty(null);
 				}}
 				initialData={editingBounty}

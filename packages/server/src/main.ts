@@ -5,7 +5,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import { context } from "~/context";
-import { resolvers, typeDefs } from "~/graphql";
+import { schema } from "~/graphql/schema";
+import { ROUTES } from "~/shared/const";
 import { formatGraphQLError, validateEnv } from "~/utils";
 import "tsconfig-paths/register";
 
@@ -31,22 +32,21 @@ async function startServer() {
 	app.use(express.urlencoded({ extended: false }));
 
 	const apolloServer = new ApolloServer({
-		typeDefs,
-		resolvers,
+		schema,
 		formatError: formatGraphQLError,
 	});
 
 	await apolloServer.start();
 
 	app.use(
-		"/galactic-bounty",
+		ROUTES.ROOT,
 		expressMiddleware(apolloServer, {
 			context,
 		}),
 	);
 
 	app.listen(PORT, () => {
-		console.log(`🚀 Server ready at http://localhost:${PORT}/galactic-bounty`);
+		console.log(`🚀 GraphQL server running at http://localhost:${PORT}${ROUTES.ROOT}`);
 	});
 }
 
